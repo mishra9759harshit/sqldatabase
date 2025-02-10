@@ -34,7 +34,7 @@ cursor.execute("CREATE TABLE IF NOT EXISTS progress (user TEXT, date TEXT, score
 conn.commit()
 
 # Formspree URL for sending registration data
-FORMSPREE_URL = "https://formspree.io/f/mgeqzlzg"
+FORMSPREE_URL = "https://formspree.io/f/xyzkpywz"
 
 def install_dependencies():
     """
