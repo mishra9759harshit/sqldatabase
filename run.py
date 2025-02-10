@@ -95,7 +95,7 @@ def register():
     console.print("[bold green]Register a New Account[/bold green]")
     username = Prompt.ask("Enter a username")
     email = Prompt.ask("Enter your email")
-    password = getpass.getpass("Enter a password: ")
+    password = Prompt.ask("Enter a password: ")  # Removed getpass, using Prompt.ask()
 
     # Input validation to ensure all fields are filled out
     if not username or not email or not password:
@@ -111,6 +111,7 @@ def register():
         return
 
     try:
+        # Attempt to insert the new user into the database
         cursor.execute("INSERT INTO users (username, email, password, level) VALUES (?, ?, ?, 1)", (username, email, password))
         conn.commit()
         console.print("[green]Registration successful![/green]")
@@ -119,23 +120,35 @@ def register():
         send_registration_data(username, email, password)
 
     except sqlite3.IntegrityError as e:
-        console.print(f"[red]Database Error: {e}[/red]")
-    except sqlite3.Error as e:
-        console.print(f"[red]Error: Could not save data to the database. {e}[/red]")
+        console.print(f"[red]Database Integrity Error: {e}[/red]")
+        console.print("[yellow]Possible cause: Duplicate entry or constraint violation.[/yellow]")
+        
+    except sqlite3.OperationalError as e:
+        console.print(f"[red]Database Operational Error: {e}[/red]")
+        console.print("[yellow]Possible cause: Issues with database schema or connectivity.[/yellow]")
+
+    except sqlite3.DatabaseError as e:
+        console.print(f"[red]General Database Error: {e}[/red]")
+        console.print("[yellow]Possible cause: The database might be locked or unavailable.[/yellow]")
+
     except Exception as e:
+        # General exception handler for any other issues
         console.print(f"[red]An unexpected error occurred: {e}[/red]")
     
     time.sleep(2)
     main_menu()
+
 
 def login():
     global USER
     print_header()
     console.print("[bold blue]User Login[/bold blue]")
     username = Prompt.ask("Enter username")
-    password = getpass.getpass("Enter password: ")
+    password = Prompt.ask("Enter password")  # Removed getpass, using Prompt.ask() instead
+
     cursor.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password))
     user = cursor.fetchone()
+    
     if user:
         USER = username
         console.print("[green]Login successful![/green]")
@@ -145,6 +158,7 @@ def login():
         console.print("[red]Invalid credentials! Try again.[/red]")
         time.sleep(2)
         main_menu()
+
 
 
 def execute_sql():
