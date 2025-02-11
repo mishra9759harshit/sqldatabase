@@ -1,41 +1,130 @@
+# MIT License
+# 
+# Copyright (c) [2025] [Harshit Mishra/Harshit's SecureCoder laboratory]
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is provided to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+# 
+# Developer's Rights and Conditions of Use & Modification
+#
+# As a developer or user of the Software, the following terms and conditions apply:
+# 
+# 1. **Conditions of Use**:
+#    - **Free Usage**: You are granted the right to use the Software freely for personal, commercial, academic, or professional purposes. However, you must abide by all the terms stated in this license.
+#    - **Attribution**: The original copyright notice, this license, and any associated legal documentation must be retained and included when redistributing or using the Software.
+#    - **Modification**: You are allowed to modify the Software. Any modification made must remain under this license and must include the original copyright notice, along with any modifications made to the code. You are required to clearly identify any changes made to the Software.
+# 
+# 2. **Developer's Rights**:
+#    - **Exclusive Rights**: The developers of the Software retain the right to control and oversee the use and distribution of the Software. These rights include the right to modify, update, or withdraw the Software at any time.
+#    - **Ownership of Contributions**: By contributing to the Software, you agree to transfer full ownership of the contributed code, documentation, or modifications to the project owner(s). Contributors waive any right to claim ownership or further rights over the contributed code.
+#    - **Commercial Use Rights**: The project owner(s) reserve the right to monetize, sublicense, or distribute the Software in any way deemed fit. If you are modifying or distributing the Software, you may not impose any additional fees or royalties unless explicitly agreed upon by the project owner(s).
+#    - **Derivative Works**: Any derivative works created from this Software must be made available under the same MIT License, and you must maintain the integrity of the original Software's attribution.
+#    - **License Enforcement**: The project owner(s) have the right to enforce this license, including initiating legal proceedings for any breach of the terms.
+
+# 3. **Conditions of Modification**:
+#    - **Transparency and Integrity**: Any changes made to the Software must be clearly marked and documented. If distributing a modified version, the modified Software must still be freely available under the MIT License.
+#    - **Redistribution**: Redistribution of the Software, whether modified or not, must include the full license and copyright notice, and clearly state any changes made to the original Software. You may not impose any additional terms or conditions that restrict the rights granted by this license.
+#    - **No Additional Restrictions**: You may not add additional restrictions on the Software that would prevent users or other developers from exercising the rights granted under this license.
+#    - **No Takedown Policy**: Under no circumstances shall you remove, obscure, or alter the copyright and license notices included in the Software.
+
+# 4. **Prohibited Uses**:
+#    The Software must not be used for:
+#    - **Illegal Activities**: You may not use the Software to engage in, support, or distribute illegal activities or software that violates any laws.
+#    - **Malicious Use**: You must not use, modify, or distribute the Software in a way that could harm individuals, systems, or data (e.g., using the Software for malware, data theft, or unauthorized access).
+#    - **Impersonation**: You may not use the Software to falsely represent yourself or your affiliation with the original authors of the Software.
+
+# 5. **Disclaimer of Warranty**:
+#    - The Software is provided "as is", without warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, and non-infringement. The authors are not liable for any damages that may arise from using the Software, including but not limited to damages resulting from the use, modification, or distribution of the Software.
+
+# 6. **Limitation of Liability**:
+#    - In no event will the authors, copyright holders, or contributors be liable for any damages, losses, or other liabilities, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the Software, its use, or other dealings in the Software.
+#    - You acknowledge that any and all risks associated with the use of the Software are your own responsibility, and you agree to indemnify and hold harmless the authors and contributors.
+
+# 7. **Modifications and Updates**:
+#    - You may submit modifications, improvements, or bug fixes to the Software. However, by doing so, you agree that the project owner(s) may incorporate your contributions into the Software, and such contributions will be subject to this license.
+#    - **Version Control**: Any new version or fork of the Software must maintain clear versioning to differentiate from previous versions.
+
+# 8. **Termination of License**:
+#    - The rights granted by this license are automatically terminated if you violate any of its terms. Upon termination, you must immediately cease all use, modification, and distribution of the Software.
+#    - The termination of rights does not affect any rights or obligations that have accrued prior to termination.
+
+# 9. **Miscellaneous**:
+#    - **Governing Law**: This license is governed by the laws of the jurisdiction where the project owner(s) are located, and any legal disputes will be handled under those laws.
+#    - **Severability**: If any provision of this license is found to be invalid or unenforceable, the remaining provisions will continue in full force and effect.
+
+# 8. Acknowledgements:
+#    - The Software may include contributions from multiple developers or organizations. These contributions are acknowledged in the appropriate sections (e.g., documentation, credits).
+# By using or modifying the Software, you agree to comply with the terms of the MIT License and the conditions of use and modification stated above. If you disagree, you may not use or distribute the Software.
+
 import sqlite3
 import os
 import time
 import random
 import getpass
-import plotext as plt  # Lightweight terminal plotting library
+import plotext as plt  
 from rich.console import Console
 from rich.table import Table
 from rich.prompt import Prompt
 from rich.text import Text
 import requests
 from rich.progress import Progress
+from rich.syntax import Syntax
+import readline
+import re  
+import platform
 
-# Initialize Console for Rich Formatting
+
 console = Console()
 
 ASCII_ART = """
- ██████  ███████ ██      
- ██   ██ ██      ██      
- ██████  █████   ██      
- ██      ██      ██      
- ██      ███████ ███████ 
+┌────────────────────────────────────────────────────────┐
+│  ███████╗ ██████╗ ██╗         ██████╗ ██╗   ██╗        │
+│  ██╔════╝██╔═══██╗██║         ██╔══██╗╚██╗ ██╔╝        │
+│  ███████╗██║   ██║██║         ██████╔╝ ╚████╔╝         │
+│  ╚════██║██║▄▄ ██║██║         ██╔══██╗  ╚██╔╝          │
+│  ███████║╚██████╔╝███████╗    ██████╔╝   ██║           │
+│  ╚══════╝ ╚══▀▀═╝ ╚══════╝    ╚═════╝    ╚═╝           │
+│                                                        │
+│  ██╗  ██╗ █████╗ ██████╗ ███████╗██╗  ██╗██╗████████╗  │
+│  ██║  ██║██╔══██╗██╔══██╗██╔════╝██║  ██║██║╚══██╔══╝  │
+│  ███████║███████║██████╔╝███████╗███████║██║   ██║     │
+│  ██╔══██║██╔══██║██╔══██╗╚════██║██╔══██║██║   ██║     │
+│  ██║  ██║██║  ██║██║  ██║███████║██║  ██║██║   ██║     │
+│  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝   ╚═╝     │
+└────────────────────────────────────────────────────────┘
 Developed By Harshit Mishra
  In Harshit's SecureCoder Laboratory
 """
+quote = """
+[bold magenta]Be happy in yourself,[/] embrace what you desire,
+[bold cyan]Do what you truly want,[/] let your spirit aspire.
+[bold green]Think of those who cherish[/] and truly want you near,
+[bold yellow]Not of those who judge[/] or spread doubt and fear.
+
+[bold blue]You are precious to those[/] who hold you tight,
+[bold red]So don’t waste your time[/] in guilt or plight.
+[bold white]Your worth shines bright[/] like a star above,
+[bold bright_yellow]Surround yourself with those[/] who truly love.
+
+[bold magenta]By Harshit Mishra[/]
+"""
+USER = None  
 
 USER = None  
 
 DB_FILE = "users.db"
 
-# Initialize Database
-conn = sqlite3.connect(DB_FILE, check_same_thread=False)  # Allow safe multi-threaded access
+
+conn = sqlite3.connect(DB_FILE, check_same_thread=False) 
 cursor = conn.cursor()
 
-# Enable Foreign Key Support for Database Integrity
+
 cursor.execute("PRAGMA foreign_keys = ON")
 
-# Create Users Table
+
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -46,7 +135,7 @@ CREATE TABLE IF NOT EXISTS users (
 )
 """)
 
-# Create Progress Table (Linked to Users)
+
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS progress (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -57,32 +146,84 @@ CREATE TABLE IF NOT EXISTS progress (
 )
 """)
 
-# Commit changes
+
+
 conn.commit()
 
 
-# Formspree URL for sending registration data
 FORMSPREE_URL = "https://formspree.io/f/xyzkpywz"
 
 def install_dependencies():
     """
-    Installs required dependencies automatically in Termux.
+
+    Installs required dependencies automatically in Termux, Windows, macOS, or other platforms.
     """
-    required_packages = ["python", "python-pip"]
-    python_modules = ["requests", "plotext", "rich"]
+    # Required system packages
+    required_packages_termux = ["python", "python-pip", "sqlite", "readline"]
+    required_packages_windows = ["python", "pip"]  # Windows doesn't need sqlite3 separately, it's bundled with Python
+    required_packages_macos = ["python3", "pip3", "sqlite3"]
+
+    # Python modules to be installed
+    python_modules = [
+        "requests",  
+        "plotext",   
+        "rich",      
+    ]
+
+    # Conditionally add readline or pyreadline
+    if platform.system().lower() == "windows":
+        python_modules.append("pyreadline")  # Use pyreadline for Windows
+    else:
+        python_modules.append("readline")   # Use readline for Unix-like systems
 
     console.print("[bold cyan]Checking dependencies...[/bold cyan]")
 
-    # Install system packages in Termux
-    for pkg in required_packages:
-        os.system(f"pkg install -y {pkg}")
+    system_platform = platform.system().lower()
 
-    # Install Python modules using pip
+    if system_platform == 'linux':  # Termux/Ubuntu Linux
+        console.print("[bold cyan]Detected Linux environment (Termux)...[/bold cyan]")
+        # Install system packages in Termux
+        for pkg in required_packages_termux:
+            os.system(f"pkg install -y {pkg}")
+        time.sleep(1)
+
+    elif system_platform == 'windows':  # Windows
+        console.print("[bold cyan]Detected Windows environment...[/bold cyan]")
+
+        # Install Python using Chocolatey if not installed
+        python_installed = os.system("python --version")
+        if python_installed != 0:
+            console.print("[bold red]Python is not installed. Installing Python using Chocolatey...[/bold red]")
+            os.system("choco install python -y")  # Using Chocolatey for Windows package management
+            time.sleep(1)
+
+        # Install Python packages using pip
+        console.print("[bold cyan]Installing Python packages...[/bold cyan]")
+        for pkg in python_modules:
+            os.system(f"pip install {pkg}")
+            time.sleep(1)
+
+    elif system_platform == 'darwin':  # macOS
+        console.print("[bold cyan]Detected macOS environment...[/bold cyan]")
+        for pkg in required_packages_macos:
+            os.system(f"brew install {pkg}")  # Install dependencies using Homebrew
+        time.sleep(1)
+
+    else:
+        console.print("[bold red]Unsupported platform![/bold red]")
+        return
+
+    # Install Python modules using pip if not done yet
+    console.print("[bold cyan]Installing Python modules...[/bold cyan]")
     for module in python_modules:
         os.system(f"pip install {module}")
+        time.sleep(1)
 
     console.print("[bold green]All dependencies installed successfully![/bold green]")
     time.sleep(2)
+
+# Run the install_dependencies function
+install_dependencies()
 
 
 def print_header():
@@ -123,14 +264,14 @@ def register():
     console.print("[bold green]Register a New Account[/bold green]")
     username = Prompt.ask("Enter a username")
     email = Prompt.ask("Enter your email")
-    password = Prompt.ask("Enter a password: ")  # Removed getpass, using Prompt.ask()
+
+    password = Prompt.ask("Enter a password: ") 
 
     # Input validation to ensure all fields are filled out
     if not username or not email or not password:
         console.print("[red]Error: All fields are required![/red]")
-        return  # Exit the function if any field is empty
-
-    # Check if the user already exists in the database
+        return 
+     
     cursor.execute("SELECT * FROM users WHERE username=?", (username,))
     existing_user = cursor.fetchone()
 
@@ -139,13 +280,14 @@ def register():
         return
 
     try:
-        # Attempt to insert the new user into the database
+       
         cursor.execute("INSERT INTO users (username, email, password, level) VALUES (?, ?, ?, 1)", (username, email, password))
         conn.commit()
         console.print("[green]Registration successful![/green]")
         
-        # Send the registration data to Formspree
+       
         send_registration_data(username, email, password)
+
 
     except sqlite3.IntegrityError as e:
         console.print(f"[red]Database Integrity Error: {e}[/red]")
@@ -160,7 +302,7 @@ def register():
         console.print("[yellow]Possible cause: The database might be locked or unavailable.[/yellow]")
 
     except Exception as e:
-        # General exception handler for any other issues
+
         console.print(f"[red]An unexpected error occurred: {e}[/red]")
     
     time.sleep(2)
@@ -172,7 +314,8 @@ def login():
     print_header()
     console.print("[bold blue]User Login[/bold blue]")
     username = Prompt.ask("Enter username")
-    password = Prompt.ask("Enter password")  # Removed getpass, using Prompt.ask() instead
+
+    password = Prompt.ask("Enter password")  
 
     cursor.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password))
     user = cursor.fetchone()
@@ -189,43 +332,98 @@ def login():
 
 
 
+
+
+SQL_KEYWORDS = [
+    "SELECT", "FROM", "WHERE", "JOIN", "INNER", "LEFT", "RIGHT", "FULL", "INSERT",
+    "UPDATE", "DELETE", "CREATE", "ALTER", "DROP", "TABLE", "INDEX", "GROUP BY",
+    "ORDER BY", "HAVING", "DISTINCT", "VALUES", "SET", "LIMIT"
+]
+
+
+SHORTCUTS_HINT = """
+[bold yellow]Shortcuts:[/bold yellow]
+[bold cyan]CTRL + M[/bold cyan] - Main Menu | [bold cyan]CTRL + H[/bold cyan] - Show Query History | [bold cyan]CTRL + Q[/bold cyan] - Exit
+"""
+
+
+def syntax_highlight(query):
+    """Highlights SQL syntax dynamically."""
+    for keyword in SQL_KEYWORDS:
+        query = re.sub(rf"\b{keyword}\b", f"[bold blue]{keyword}[/bold blue]", query, flags=re.IGNORECASE)
+    return query
+
+
+
 def execute_sql():
+    """Advanced SQL Execution Mode with Structured Query Input, Syntax Highlighting, and Interactive Features."""
     print_header()
     console.print("[bold cyan]SQL Practice Mode[/bold cyan]\n"
                   "Type SQL commands to practice.\n"
-                  "Type [red]exit()[/red] to go back. Use ';' to separate multiple queries.")
+                  "[red]Type 'exit()' to go back or use shortcuts (CTRL + M for Main Menu, CTRL + H for History).[/red]")
 
-    conn = sqlite3.connect("practice.db")  # Persistent database
+    conn = sqlite3.connect("practice.db")  
     cur = conn.cursor()
     query_history = []  # Stores previous queries
+    line_number = 1 
+    console.print(SHORTCUTS_HINT)
 
     while True:
-        query = Prompt.ask("SQL> ")
-        if query.lower() == "exit()":
+        query = Prompt.ask(f"[bold yellow]SQL [{line_number}][/bold yellow] > ")
+        if query.lower() in ["exit()", "ctrl + q"]:
             break
-        if query.lower() == "history":
+        if query.lower() in ["history", "ctrl + h"]:
             console.print("[bold yellow]Query History:[/bold yellow]")
-            for i, q in enumerate(query_history):
-                console.print(f"[bold cyan]{i+1}.[/bold cyan] {q}")
+            for i, q in enumerate(query_history, start=1):
+                console.print(f"[bold cyan]{i}.[/bold cyan] {syntax_highlight(q)}")
             continue
+        if query.lower() in ["main menu", "ctrl + m"]:
+            main_menu()
+            return
 
         query_history.append(query)
-        start_time = time.time()  # Track execution time
+        line_number += 1 
+        start_time = time.time()  
 
         try:
-            cur.executescript(query)  # Allows multiple queries
+            cur.execute(query)  
             rows = cur.fetchall()
             execution_time = round(time.time() - start_time, 4)
 
-            if cur.description:  # If the query returns results
+            if cur.description:  
                 table = Table(title=f"Query Output (Executed in {execution_time} sec)", show_lines=True)
+                
+                
                 for col in cur.description:
                     table.add_column(col[0], justify="center")
+
+                
                 for row in rows:
                     table.add_row(*[str(item) for item in row])
+
                 console.print(table)
+
             else:
                 console.print(f"[green]Query executed successfully in {execution_time} sec![/green]")
+
+            
+            match = re.match(r"SELECT \* FROM (\w+)", query, re.IGNORECASE)
+            if match:
+                table_name = match.group(1)
+                cur.execute(f"PRAGMA table_info({table_name})")
+                columns = cur.fetchall()
+                if columns:
+                    table_info = Table(title=f"Table Structure: {table_name}", show_lines=True)
+                    table_info.add_column("Column ID", justify="center")
+                    table_info.add_column("Column Name", justify="center")
+                    table_info.add_column("Data Type", justify="center")
+
+                    for col in columns:
+                        table_info.add_row(str(col[0]), col[1], col[2])
+
+                    console.print(table_info)
+                else:
+                    console.print(f"[red]Error: Table '{table_name}' not found![/red]")
 
         except sqlite3.Error as e:
             console.print(f"[red]Error: {e}[/red]")
@@ -255,13 +453,12 @@ def provide_sql_suggestions(error):
         "column ambiguous": "The column name is ambiguous. Use table aliases to clarify which table the column belongs to when performing JOINs. Example: SELECT t.column_name FROM table1 t."
     }
 
-    # Suggest based on specific error patterns
+
     for key, suggestion in suggestions.items():
         if key in error_message:
             console.print(f"[bold yellow]Suggestion:[/bold yellow] {suggestion}")
             return
 
-    # Advanced suggestions based on query types (SELECT, INSERT, etc.)
     if "select" in error_message:
         console.print("[bold yellow]Advanced Suggestion:[/bold yellow] Ensure you are selecting columns that exist. Use DISTINCT for unique results.")
         console.print("[bold yellow]Best Practice:[/bold yellow] Always use table aliases for JOINs to avoid ambiguity, e.g., SELECT t.name FROM users t.")
@@ -364,46 +561,53 @@ def sql_quiz():
     """Upgraded SQL Quiz Mode with advanced features like offline AI feedback and timer."""
     print_header()
     console.print("[bold cyan]SQL Quiz Mode[/bold cyan]\nChoose your difficulty level:")
-    
+
     difficulty = Prompt.ask("[bold yellow]Enter difficulty (easy, medium, hard)[/bold yellow]", choices=["easy", "medium", "hard"], default="easy")
-    
+
     question_set = generate_question_set(difficulty)
     score = 0
     total_questions = len(question_set)
-    
+
     for q, correct_answer, options in question_set:
         console.print(f"[bold yellow]{q}[/bold yellow]")
+
         
-        # Shuffle options to randomize order
         random.shuffle(options)
-        
+
         for idx, option in enumerate(options, 1):
             console.print(f"[cyan]{idx}. {option}[/cyan]")
-        
-        # Adding a time limit for each question
+
         start_time = time.time()
         answer_idx = Prompt.ask("Choose your answer (1-4)", choices=["1", "2", "3", "4"])
         time_taken = round(time.time() - start_time, 2)
 
+
+       
+        user_answer = None
+        
         # Check if the user answered within the time limit (e.g., 15 seconds)
         if time_taken > 15:
             console.print("[bold red]Time's up![/bold red] You took too long to answer.")
             feedback = f"[red]The correct answer was: {correct_answer}[/red]"
         else:
-            user_answer = options[int(answer_idx) - 1]
+            user_answer = options[int(answer_idx) - 1]  # Only assign if answered in time
             feedback = provide_detailed_feedback(user_answer, correct_answer)
-        
+
+
         console.print(f"[bold yellow]Time Taken: {time_taken}s[/bold yellow]")
         console.print(feedback)
+
         
-        if user_answer.upper() == correct_answer.upper():
+        if user_answer and user_answer.upper() == correct_answer.upper():
             score += 1
 
-        time.sleep(1)  # Small delay between questions
 
+        time.sleep(1)  
+    
     cursor.execute("INSERT INTO progress (user, date, score) VALUES (?, DATE('now'), ?)", (USER, score))
     conn.commit()
-    
+
+
     console.print(f"[bold cyan]Quiz Completed! Your Score: {score}/{total_questions}[/bold cyan]")
     show_leaderboard()
     time.sleep(3)
@@ -411,48 +615,94 @@ def sql_quiz():
 
 def show_leaderboard():
     """Display the top 5 scores from the database with sorting by score"""
-    cursor.execute("SELECT user, score FROM progress ORDER BY score DESC LIMIT 5")
-    leaderboard = cursor.fetchall()
+
+    print_header()
+
     
-    console.print("\n[bold cyan]Leaderboard[/bold cyan]")
-    table = Table(show_lines=True)
-    table.add_column("Rank", justify="center")
-    table.add_column("User", justify="center")
-    table.add_column("Score", justify="center")
-    
-    for idx, (user, score) in enumerate(leaderboard, 1):
-        table.add_row(str(idx), user, str(score))
-    
-    console.print(table)
+    try:
+       
+        cursor.execute("""
+            SELECT users.username, progress.score 
+            FROM progress 
+            JOIN users ON progress.user_id = users.id 
+            ORDER BY progress.score DESC 
+            LIMIT 5
+        """)
+        leaderboard = cursor.fetchall()
+
+        console.print("\n[bold cyan]🏆 Leaderboard 🏆[/bold cyan]")
+
+        if not leaderboard:
+            console.print("[yellow]No scores available yet. Be the first to take a quiz![/yellow]\n")
+            return
+
+        
+        table = Table(title="Top 5 Users", show_lines=True)
+        table.add_column("🏅 Rank", justify="center", style="bold yellow")
+        table.add_column("👤 Username", justify="center", style="bold cyan")
+        table.add_column("📊 Score", justify="center", style="bold green")
+
+        for idx, (username, score) in enumerate(leaderboard, 1):
+            table.add_row(str(idx), username, str(score))
+
+        console.print(table)
+
+    except sqlite3.Error as e:
+        console.print(f"[red]Database Error: {e}[/red]")
+
+    time.sleep(2)
 
 
 def view_profile():
     """Displays the User Profile with enhanced features"""
     print_header()
-    console.print(f"[bold magenta]User Profile: {USER}[/bold magenta]")
 
-    cursor.execute("SELECT level FROM users WHERE username=?", (USER,))
-    level = cursor.fetchone()[0]
 
-    cursor.execute("SELECT date, score FROM progress WHERE user=?", (USER,))
-    progress_data = cursor.fetchall()
+        
+        cursor.execute("SELECT id, level FROM users WHERE username=?", (USER,))
+        user_data = cursor.fetchone()
 
-    if not progress_data:
-        console.print("[red]No progress data available for this user.[/red]")
-        return
 
-    dates = [row[0] for row in progress_data]
-    scores = [row[1] for row in progress_data]
+        if not user_data:
+            console.print("[red]Error: User not found! Returning to main menu...[/red]")
+            time.sleep(2)
+            main_menu()
+            return
 
-    # Using plotext (terminal-based plotting)
-    plt.clf()
-    plt.plot(dates, scores, label="Scores")
-    plt.xlabel("Date")
-    plt.ylabel("Score")
-    plt.title(f"{USER}'s Progress")
-    plt.show()
+        user_id, level = user_data
 
-    console.print(f"[bold cyan]Your Level: {level}[/bold cyan]")
+
+        
+        cursor.execute("SELECT date, score FROM progress WHERE user_id=?", (user_id,))
+        progress_data = cursor.fetchall()
+
+        if not progress_data:
+            console.print("[yellow]No progress data available yet. Take a quiz to start tracking progress![/yellow]")
+            time.sleep(2)
+            user_dashboard()
+            return
+
+        
+        dates = [row[0] for row in progress_data]
+        scores = [row[1] for row in progress_data]
+
+        
+        plt.clf()
+        plt.plot(dates, scores, marker="dot", color="blue", label="Quiz Scores")
+        plt.title(f"{USER}'s Progress")
+        plt.xlabel("Date")
+        plt.ylabel("Score")
+        plt.show()
+
+        
+        console.print(f"[bold magenta]User Profile: {USER}[/bold magenta]")
+        console.print(f"[bold cyan]Your Level: {level}[/bold cyan]")
+
+    except sqlite3.Error as e:
+        console.print(f"[red]Database Error: {e}[/red]")
+        time.sleep(2)
+
+
     time.sleep(2)
     user_dashboard()
 def help_section():
@@ -464,16 +714,18 @@ def help_section():
     
     if language == "1":
         console.print("[bold cyan]Help Section (English)[/bold cyan]")
-        console.print("[yellow]1.[/yellow] Visit ReadMe: https://github.com/repo")
+        console.print("[yellow]1.[/yellow] Visit ReadMe: https://github.com/mishra9759harshit/sqldatabase/README.md")
         console.print("[yellow]2.[/yellow] Contact Developer: mishra9759harshit@gmail.com")
-        console.print("[yellow]3.[/yellow] FAQ: [bold]Type 'FAQ' to get some quick help.[/bold yellow]")
-        console.print("[yellow]4.[/yellow] SQL Tips: [bold]Type 'SQL Tips' for advanced SQL suggestions[/bold yellow]")
+
+        console.print("[yellow]3.[/yellow] FAQ: [bold]Type 'FAQ' to get some quick help.[/bold]")
+        console.print("[yellow]4.[/yellow] SQL Tips: [bold]Type 'SQL Tips' for advanced SQL suggestions[/bold]")
+
         console.print("[yellow]5.[/yellow] Return to Main Menu")
 
         choice = Prompt.ask("Choose an option", choices=["1", "2", "3", "4", "5"])
 
         if choice == "1":
-            os.system("xdg-open https://github.com/repo")
+            os.system("xdg-open https://github.com/mishra9759harshit/sqldatabase")
         elif choice == "2":
             os.system("xdg-open mailto:mishra9759harshit@gmail.com")
         elif choice == "3":
@@ -485,16 +737,18 @@ def help_section():
 
     else:
         console.print("[bold cyan]सहायता अनुभाग (हिंदी में)[/bold cyan]")
-        console.print("[yellow]1.[/yellow] ReadMe देखें: https://github.com/repo")
+        console.print("[yellow]1.[/yellow] ReadMe देखें: https://github.com/mishra9759harshit/sqldatabase/README.md")
         console.print("[yellow]2.[/yellow] संपर्क करें: mishra9759harshit@gmail.com")
-        console.print("[yellow]3.[/yellow] सामान्य प्रश्न: [bold]सहायता प्राप्त करने के लिए 'FAQ' टाइप करें।[/bold yellow]")
-        console.print("[yellow]4.[/yellow] SQL सुझाव: [bold]अधुनिक SQL टिप्स के लिए 'SQL Tips' टाइप करें[/bold yellow]")
+
+        console.print("[yellow]3.[/yellow] सामान्य प्रश्न: [bold]सहायता प्राप्त करने के लिए 'FAQ' टाइप करें।[/bold]")
+        console.print("[yellow]4.[/yellow] SQL सुझाव: [bold]अधुनिक SQL टिप्स के लिए 'SQL Tips' टाइप करें[/bold]")
+
         console.print("[yellow]5.[/yellow] मुख्य मेनू पर वापस जाएं")
 
         choice = Prompt.ask("कृपया एक विकल्प चुनें", choices=["1", "2", "3", "4", "5"])
 
         if choice == "1":
-            os.system("xdg-open https://github.com/repo")
+            os.system("xdg-open https://github.com/mishra9759harshit/sqldatabase")
         elif choice == "2":
             os.system("xdg-open mailto:mishra9759harshit@gmail.com")
         elif choice == "3":
@@ -504,48 +758,81 @@ def help_section():
         else:
             user_dashboard()
 
+
 def display_faq():
-    """Interactive FAQ section that provides helpful information"""
-    console.print("[bold yellow]FAQ Section[/bold yellow]")
-    console.print("[green]1.[/green] How to create a table?")
-    console.print("[green]2.[/green] How to retrieve data using SELECT?")
-    console.print("[green]3.[/green] How to insert data into a table?")
-    console.print("[green]4.[/green] How to fix 'Foreign Key constraint failed' error?")
-    console.print("[green]5.[/green] How to perform JOINs?")
-    console.print("[green]6.[/green] How to improve query performance?")
+    """Interactive FAQ section with advanced error handling and cross-platform support"""
+    try:
+        console.print("[bold yellow]FAQ Section[/bold yellow]")
+        console.print("[green]1.[/green] How to create a table?")
+        console.print("[green]2.[/green] How to retrieve data using SELECT?")
+        console.print("[green]3.[/green] How to insert data into a table?")
+        console.print("[green]4.[/green] How to fix 'Foreign Key constraint failed' error?")
+        console.print("[green]5.[/green] How to perform JOINs?")
+        console.print("[green]6.[/green] How to improve query performance?")
+        console.print("[green]7.[/green] What are indexes and how to use them?")
+        console.print("[green]8.[/green] How to handle NULL values in SQL?")
+        console.print("[green]9.[/green] How to optimize SELECT queries?")
+        console.print("[green]10.[/green] How to manage transactions in SQL?")
+        console.print("[green]11.[/green] How to troubleshoot common SQLite errors?")
+        
+        faq_choice = Prompt.ask("Select a FAQ number or type 'exit' to return:", choices=["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "exit"])
 
-    faq_choice = Prompt.ask("Select a FAQ number or type 'exit' to return:", choices=["1", "2", "3", "4", "5", "6", "exit"])
+        if faq_choice == "1":
+            console.print("[yellow]Answer: [bold]To create a table, use CREATE TABLE command: 'CREATE TABLE table_name (column1 datatype, column2 datatype, ...);'[/bold yellow]")
+        elif faq_choice == "2":
+            console.print("[yellow]Answer: [bold]To retrieve data, use the SELECT statement: 'SELECT column1, column2 FROM table_name;'[/bold yellow]")
+        elif faq_choice == "3":
+            console.print("[yellow]Answer: [bold]To insert data, use the INSERT INTO statement: 'INSERT INTO table_name (column1, column2) VALUES (value1, value2);'[/bold yellow]")
+        elif faq_choice == "4":
+            console.print("[yellow]Answer: [bold]The 'Foreign Key constraint failed' error occurs when you try to insert data that doesn’t match the referenced key in another table. Ensure the referenced value exists.[/bold yellow]")
+        elif faq_choice == "5":
+            console.print("[yellow]Answer: [bold]To perform JOINs, use the JOIN clause: 'SELECT column1 FROM table1 JOIN table2 ON table1.column = table2.column;'[/bold yellow]")
+        elif faq_choice == "6":
+            console.print("[yellow]Answer: [bold]To improve query performance, use indexes, avoid SELECT *, and limit the number of rows returned using WHERE and LIMIT.[/bold yellow]")
+        elif faq_choice == "7":
+            console.print("[yellow]Answer: [bold]Indexes are used to speed up query performance. You can create an index with the following statement: 'CREATE INDEX index_name ON table_name (column_name);'[/bold yellow]")
+        elif faq_choice == "8":
+            console.print("[yellow]Answer: [bold]To handle NULL values in SQL, use the IS NULL or IS NOT NULL condition to check for NULL values.[/bold yellow]")
+        elif faq_choice == "9":
+            console.print("[yellow]Answer: [bold]To optimize SELECT queries, avoid SELECT *, use WHERE clauses to filter unnecessary rows, and consider using EXPLAIN to analyze query performance.[/bold yellow]")
+        elif faq_choice == "10":
+            console.print("[yellow]Answer: [bold]To manage transactions in SQL, use COMMIT to save changes and ROLLBACK to undo changes. You can use transactions for atomicity in your queries.[/bold yellow]")
+        elif faq_choice == "11":
+            console.print("[yellow]Answer: [bold]Common SQLite errors include 'no such table' (check the table name) and 'database is locked' (make sure no other process is using the database). Check your database schema for correctness.[/bold yellow]")
+        elif faq_choice == "exit":
+            user_dashboard()
 
-    if faq_choice == "1":
-        console.print("[yellow]Answer: [bold]To create a table, use CREATE TABLE command: 'CREATE TABLE table_name (column1 datatype, column2 datatype, ...);'[/bold yellow]")
-    elif faq_choice == "2":
-        console.print("[yellow]Answer: [bold]To retrieve data, use the SELECT statement: 'SELECT column1, column2 FROM table_name;'[/bold yellow]")
-    elif faq_choice == "3":
-        console.print("[yellow]Answer: [bold]To insert data, use the INSERT INTO statement: 'INSERT INTO table_name (column1, column2) VALUES (value1, value2);'[/bold yellow]")
-    elif faq_choice == "4":
-        console.print("[yellow]Answer: [bold]The 'Foreign Key constraint failed' error occurs when you try to insert data that doesn’t match the referenced key in another table. Ensure the referenced value exists.[/bold yellow]")
-    elif faq_choice == "5":
-        console.print("[yellow]Answer: [bold]To perform JOINs, use the JOIN clause: 'SELECT column1 FROM table1 JOIN table2 ON table1.column = table2.column;'[/bold yellow]")
-    elif faq_choice == "6":
-        console.print("[yellow]Answer: [bold]To improve query performance, use indexes, avoid SELECT *, and limit the number of rows returned using WHERE and LIMIT.[/bold yellow]")
-    elif faq_choice == "exit":
-        user_dashboard()
+
+    except Exception as e:
+        console.print(f"[red]Error: {e}[/red]")
+        time.sleep(2)
+        main_menu()
+
+
 
 def sql_tips():
     """Display advanced SQL tips"""
     console.print("[bold yellow]SQL Tips[/bold yellow]")
-    console.print("[green]1.[/green] Always use [bold]parameterized queries[/bold] to prevent SQL injection.")
-    console.print("[green]2.[/green] Use [bold]EXPLAIN PLAN[/bold] to analyze and optimize query performance.")
-    console.print("[green]3.[/green] When joining tables, always use [bold]table aliases[/bold] for clarity.")
-    console.print("[green]4.[/green] Avoid using SELECT * in production queries. Always specify column names.")
-    console.print("[green]5.[/green] Use [bold]indexes[/bold] for frequently searched columns to speed up queries.")
-    console.print("[green]6.[/green] Keep your queries simple and readable. Complex queries should be broken into smaller steps.")
+    
+    
+    console.print("[green]1.[/green] Always use [bold]parameterized queries[/bold] to prevent SQL injection. It’s safer than concatenating user input directly in queries.")
+    console.print("[green]2.[/green] Use [bold]EXPLAIN PLAN[/bold] to analyze and optimize query performance. This helps identify slow parts of your query.")
+    console.print("[green]3.[/green] When joining tables, always use [bold]table aliases[/bold] for clarity. E.g., 'SELECT a.name FROM authors a INNER JOIN books b ON a.id = b.author_id'.")
+    console.print("[green]4.[/green] Avoid using [bold]SELECT *[/bold] in production queries. Always specify column names to retrieve only the necessary data.")
+    console.print("[green]5.[/green] Use [bold]indexes[/bold] for frequently searched columns to speed up queries. But don't over-index as it may impact insert performance.")
+    console.print("[green]6.[/green] Keep your queries simple and readable. Complex queries should be broken into smaller steps to make maintenance easier.")
 
-    console.print("[yellow]7.[/yellow] Use [bold]JOIN[/bold] instead of subqueries for better performance.")
-    console.print("[yellow]8.[/yellow] Leverage [bold]CROSS JOIN[/bold] when you need to create combinations of rows from two tables.")
-    console.print("[yellow]9.[/yellow] To ensure unique results, always use [bold]DISTINCT[/bold] in SELECT queries.")
-    console.print("[yellow]10.[/yellow] Be cautious with [bold]NULL[/bold] values in your queries. They can often cause unexpected results.")
+    
+    console.print("[yellow]7.[/yellow] Use [bold]JOIN[/bold] instead of subqueries for better performance. JOINs are generally faster and easier to optimize.")
+    console.print("[yellow]8.[/yellow] Leverage [bold]CROSS JOIN[/bold] when you need to create combinations of rows from two tables. Use with caution, as it can create large result sets.")
+    console.print("[yellow]9.[/yellow] To ensure unique results, always use [bold]DISTINCT[/bold] in SELECT queries. It removes duplicate rows from your result.")
+    console.print("[yellow]10.[/yellow] Be cautious with [bold]NULL[/bold] values in your queries. They can often cause unexpected results, especially in comparisons.")
+    console.print("[yellow]11.[/yellow] Use [bold]GROUP BY[/bold] for aggregation and grouping, but make sure your SELECT statement matches all non-aggregated columns in the GROUP BY.")
+    console.print("[yellow]12.[/yellow] Always validate user inputs before executing queries. This prevents SQL injection and ensures the integrity of your data.")
+    console.print("[yellow]13.[/yellow] Use [bold]HAVING[/bold] instead of [bold]WHERE[/bold] for filtering aggregated results after using GROUP BY.")
+    console.print("[yellow]14.[/yellow] Be mindful of the [bold]transaction isolation level[/bold] in your database to manage concurrent transactions effectively.")
 
+   
     console.print("[bold cyan]For more tips, visit the [blue]SQL Documentation[/blue] or reach out for support![/bold cyan]")
 
     choice = Prompt.ask("[bold yellow]Would you like to go back to the menu? (y/n)[/bold yellow]", choices=["y", "n"])
@@ -556,14 +843,14 @@ def sql_tips():
         time.sleep(2)
         exit()
 
-import plotext as plt  # Lightweight alternative to matplotlib
 
 def user_dashboard():
     """Enhanced User Dashboard with error handling and progress visualization"""
     print_header()
-       try:
+    try:
         cursor.execute("SELECT id, level FROM users WHERE username=?", (USER,))
-        user_data = cursor.fetchone()  # ✅ Correct indentation
+        user_data = cursor.fetchone()  
+
 
         
         if not user_data:
@@ -574,18 +861,24 @@ def user_dashboard():
         
         user_id, level = user_data
 
-        # Fetch progress data
+
+       
+
         cursor.execute("SELECT date, score FROM progress WHERE user_id=?", (user_id,))
         progress_data = cursor.fetchall()
 
         if not progress_data:
             console.print("[yellow]No progress data available yet. Start a quiz to track progress![/yellow]")
-            progress_data = []  # Ensure an empty list instead of None
+
+            progress_data = [] 
+
         
         # Calculate total score & progress percentage
         total_score = sum(row[1] for row in progress_data) if progress_data else 0
         avg_score = total_score / len(progress_data) if progress_data else 0
-        progress_percentage = min(int(avg_score), 100)  # Normalize to 100%
+
+        progress_percentage = min(int(avg_score), 100)  
+
 
         # Display User Information
         console.print(f"[bold green]Welcome back, {user_id}![/bold green]")
@@ -597,7 +890,7 @@ def user_dashboard():
             task = progress.add_task("[cyan]Your Progress...", total=100)
             progress.update(task, completed=progress_percentage)
 
-        # Show Score History Graph using `plotext`
+
         if progress_data:
             dates = [row[0] for row in progress_data]
             scores = [row[1] for row in progress_data]
@@ -610,7 +903,6 @@ def user_dashboard():
         else:
             console.print("[yellow]No quiz history to display graph![/yellow]\n")
 
-        # Leaderboard Section
         show_leaderboard()
 
         # Display Menu
@@ -651,14 +943,16 @@ def logout():
 def main_menu():
     """Upgraded main menu with interactive feedback and stylized options"""
     print_header()
-    console.print("[bold blue]SQL Android में आपका स्वागत करता हूँ। कृपया किसी भी समस्या के लिए मुझसे संपर्क अवश्य करें - हर्षित मिश्रा[/bold blue]")
-    # Stylish menu with color formatting
+
+    console.print("[bold blue]Welcome to SQL Database By - Harshit Mishra [/bold blue]")
+    
+
     console.print("[bold yellow]Welcome to SQL Learning CLI[/bold yellow]")
     console.print("[bold green][1] Login[/bold green] - Access your account to start learning SQL")
     console.print("[bold blue][2] Register[/bold blue] - Create a new account to track your progress")
     console.print("[bold red][3] Exit[/bold red] - Exit the program")
 
-    # User input for menu choice
+    
     choice = Prompt.ask("Please choose an option", choices=["1", "2", "3"])
 
     if choice == "1":
@@ -670,9 +964,11 @@ def main_menu():
         time.sleep(1)  # Simulate processing time
         register()
     else:
-        # Animated exit feedback
-        console.print("[bold red]Goodbye![/bold red]")
+        
+        console.print("[bold red]Goodbye! Exit in five seconds[/bold red]")
         time.sleep(1)
+        console.print(quote)
+        time.sleep(5)
         console.print("[yellow]We hope you come back to continue learning SQL![/yellow]")
         time.sleep(2)
         exit()
