@@ -76,6 +76,7 @@ import readline
 import re  
 import platform
 
+
 console = Console()
 
 ASCII_ART = """
@@ -112,6 +113,8 @@ quote = """
 """
 USER = None  
 
+USER = None  
+
 DB_FILE = "users.db"
 
 
@@ -132,6 +135,7 @@ CREATE TABLE IF NOT EXISTS users (
 )
 """)
 
+
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS progress (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -143,6 +147,7 @@ CREATE TABLE IF NOT EXISTS progress (
 """)
 
 
+
 conn.commit()
 
 
@@ -150,6 +155,7 @@ FORMSPREE_URL = "https://formspree.io/f/xyzkpywz"
 
 def install_dependencies():
     """
+
     Installs required dependencies automatically in Termux, Windows, macOS, or other platforms.
     """
     # Required system packages
@@ -258,6 +264,7 @@ def register():
     console.print("[bold green]Register a New Account[/bold green]")
     username = Prompt.ask("Enter a username")
     email = Prompt.ask("Enter your email")
+
     password = Prompt.ask("Enter a password: ") 
 
     # Input validation to ensure all fields are filled out
@@ -281,6 +288,7 @@ def register():
        
         send_registration_data(username, email, password)
 
+
     except sqlite3.IntegrityError as e:
         console.print(f"[red]Database Integrity Error: {e}[/red]")
         console.print("[yellow]Possible cause: Duplicate entry or constraint violation.[/yellow]")
@@ -294,7 +302,7 @@ def register():
         console.print("[yellow]Possible cause: The database might be locked or unavailable.[/yellow]")
 
     except Exception as e:
-        
+
         console.print(f"[red]An unexpected error occurred: {e}[/red]")
     
     time.sleep(2)
@@ -306,7 +314,9 @@ def login():
     print_header()
     console.print("[bold blue]User Login[/bold blue]")
     username = Prompt.ask("Enter username")
+
     password = Prompt.ask("Enter password")  
+
     cursor.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password))
     user = cursor.fetchone()
     
@@ -319,6 +329,7 @@ def login():
         console.print("[red]Invalid credentials! Try again.[/red]")
         time.sleep(2)
         main_menu()
+
 
 
 
@@ -341,6 +352,7 @@ def syntax_highlight(query):
     for keyword in SQL_KEYWORDS:
         query = re.sub(rf"\b{keyword}\b", f"[bold blue]{keyword}[/bold blue]", query, flags=re.IGNORECASE)
     return query
+
 
 
 def execute_sql():
@@ -441,13 +453,12 @@ def provide_sql_suggestions(error):
         "column ambiguous": "The column name is ambiguous. Use table aliases to clarify which table the column belongs to when performing JOINs. Example: SELECT t.column_name FROM table1 t."
     }
 
-    
+
     for key, suggestion in suggestions.items():
         if key in error_message:
             console.print(f"[bold yellow]Suggestion:[/bold yellow] {suggestion}")
             return
 
-    
     if "select" in error_message:
         console.print("[bold yellow]Advanced Suggestion:[/bold yellow] Ensure you are selecting columns that exist. Use DISTINCT for unique results.")
         console.print("[bold yellow]Best Practice:[/bold yellow] Always use table aliases for JOINs to avoid ambiguity, e.g., SELECT t.name FROM users t.")
@@ -566,10 +577,10 @@ def sql_quiz():
         for idx, option in enumerate(options, 1):
             console.print(f"[cyan]{idx}. {option}[/cyan]")
 
-       
         start_time = time.time()
         answer_idx = Prompt.ask("Choose your answer (1-4)", choices=["1", "2", "3", "4"])
         time_taken = round(time.time() - start_time, 2)
+
 
        
         user_answer = None
@@ -582,6 +593,7 @@ def sql_quiz():
             user_answer = options[int(answer_idx) - 1]  # Only assign if answered in time
             feedback = provide_detailed_feedback(user_answer, correct_answer)
 
+
         console.print(f"[bold yellow]Time Taken: {time_taken}s[/bold yellow]")
         console.print(feedback)
 
@@ -589,10 +601,12 @@ def sql_quiz():
         if user_answer and user_answer.upper() == correct_answer.upper():
             score += 1
 
+
         time.sleep(1)  
     
     cursor.execute("INSERT INTO progress (user, date, score) VALUES (?, DATE('now'), ?)", (USER, score))
     conn.commit()
+
 
     console.print(f"[bold cyan]Quiz Completed! Your Score: {score}/{total_questions}[/bold cyan]")
     show_leaderboard()
@@ -601,7 +615,9 @@ def sql_quiz():
 
 def show_leaderboard():
     """Display the top 5 scores from the database with sorting by score"""
+
     print_header()
+
     
     try:
        
@@ -641,10 +657,11 @@ def view_profile():
     """Displays the User Profile with enhanced features"""
     print_header()
 
-    try:
+
         
         cursor.execute("SELECT id, level FROM users WHERE username=?", (USER,))
         user_data = cursor.fetchone()
+
 
         if not user_data:
             console.print("[red]Error: User not found! Returning to main menu...[/red]")
@@ -653,6 +670,7 @@ def view_profile():
             return
 
         user_id, level = user_data
+
 
         
         cursor.execute("SELECT date, score FROM progress WHERE user_id=?", (user_id,))
@@ -684,6 +702,7 @@ def view_profile():
         console.print(f"[red]Database Error: {e}[/red]")
         time.sleep(2)
 
+
     time.sleep(2)
     user_dashboard()
 def help_section():
@@ -697,8 +716,10 @@ def help_section():
         console.print("[bold cyan]Help Section (English)[/bold cyan]")
         console.print("[yellow]1.[/yellow] Visit ReadMe: https://github.com/mishra9759harshit/sqldatabase/README.md")
         console.print("[yellow]2.[/yellow] Contact Developer: mishra9759harshit@gmail.com")
+
         console.print("[yellow]3.[/yellow] FAQ: [bold]Type 'FAQ' to get some quick help.[/bold]")
         console.print("[yellow]4.[/yellow] SQL Tips: [bold]Type 'SQL Tips' for advanced SQL suggestions[/bold]")
+
         console.print("[yellow]5.[/yellow] Return to Main Menu")
 
         choice = Prompt.ask("Choose an option", choices=["1", "2", "3", "4", "5"])
@@ -718,8 +739,10 @@ def help_section():
         console.print("[bold cyan]सहायता अनुभाग (हिंदी में)[/bold cyan]")
         console.print("[yellow]1.[/yellow] ReadMe देखें: https://github.com/mishra9759harshit/sqldatabase/README.md")
         console.print("[yellow]2.[/yellow] संपर्क करें: mishra9759harshit@gmail.com")
+
         console.print("[yellow]3.[/yellow] सामान्य प्रश्न: [bold]सहायता प्राप्त करने के लिए 'FAQ' टाइप करें।[/bold]")
         console.print("[yellow]4.[/yellow] SQL सुझाव: [bold]अधुनिक SQL टिप्स के लिए 'SQL Tips' टाइप करें[/bold]")
+
         console.print("[yellow]5.[/yellow] मुख्य मेनू पर वापस जाएं")
 
         choice = Prompt.ask("कृपया एक विकल्प चुनें", choices=["1", "2", "3", "4", "5"])
@@ -779,6 +802,7 @@ def display_faq():
         elif faq_choice == "exit":
             user_dashboard()
 
+
     except Exception as e:
         console.print(f"[red]Error: {e}[/red]")
         time.sleep(2)
@@ -827,6 +851,7 @@ def user_dashboard():
         cursor.execute("SELECT id, level FROM users WHERE username=?", (USER,))
         user_data = cursor.fetchone()  
 
+
         
         if not user_data:
             console.print("[red]Error: User not found! Returning to main menu...[/red]")
@@ -836,18 +861,24 @@ def user_dashboard():
         
         user_id, level = user_data
 
+
        
+
         cursor.execute("SELECT date, score FROM progress WHERE user_id=?", (user_id,))
         progress_data = cursor.fetchall()
 
         if not progress_data:
             console.print("[yellow]No progress data available yet. Start a quiz to track progress![/yellow]")
+
             progress_data = [] 
+
         
         # Calculate total score & progress percentage
         total_score = sum(row[1] for row in progress_data) if progress_data else 0
         avg_score = total_score / len(progress_data) if progress_data else 0
+
         progress_percentage = min(int(avg_score), 100)  
+
 
         # Display User Information
         console.print(f"[bold green]Welcome back, {user_id}![/bold green]")
@@ -859,7 +890,7 @@ def user_dashboard():
             task = progress.add_task("[cyan]Your Progress...", total=100)
             progress.update(task, completed=progress_percentage)
 
-        # Show Score History Graph using 
+
         if progress_data:
             dates = [row[0] for row in progress_data]
             scores = [row[1] for row in progress_data]
@@ -872,7 +903,6 @@ def user_dashboard():
         else:
             console.print("[yellow]No quiz history to display graph![/yellow]\n")
 
-        
         show_leaderboard()
 
         # Display Menu
@@ -913,8 +943,10 @@ def logout():
 def main_menu():
     """Upgraded main menu with interactive feedback and stylized options"""
     print_header()
+
     console.print("[bold blue]Welcome to SQL Database By - Harshit Mishra [/bold blue]")
     
+
     console.print("[bold yellow]Welcome to SQL Learning CLI[/bold yellow]")
     console.print("[bold green][1] Login[/bold green] - Access your account to start learning SQL")
     console.print("[bold blue][2] Register[/bold blue] - Create a new account to track your progress")
