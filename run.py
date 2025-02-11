@@ -9,6 +9,7 @@ from rich.table import Table
 from rich.prompt import Prompt
 from rich.text import Text
 import requests
+from rich.progress import Progress
 
 # Initialize Console for Rich Formatting
 console = Console()
@@ -23,15 +24,42 @@ Developed By Harshit Mishra
  In Harshit's SecureCoder Laboratory
 """
 
+USER = None  
+
 DB_FILE = "users.db"
-USER = None  # Stores the logged-in user
 
 # Initialize Database
-conn = sqlite3.connect(DB_FILE)
+conn = sqlite3.connect(DB_FILE, check_same_thread=False)  # Allow safe multi-threaded access
 cursor = conn.cursor()
-cursor.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, password TEXT, level INTEGER)")
-cursor.execute("CREATE TABLE IF NOT EXISTS progress (user TEXT, date TEXT, score INTEGER)")
+
+# Enable Foreign Key Support for Database Integrity
+cursor.execute("PRAGMA foreign_keys = ON")
+
+# Create Users Table
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    level INTEGER DEFAULT 1
+)
+""")
+
+# Create Progress Table (Linked to Users)
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS progress (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    date TEXT NOT NULL,
+    score INTEGER DEFAULT 0,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+)
+""")
+
+# Commit changes
 conn.commit()
+
 
 # Formspree URL for sending registration data
 FORMSPREE_URL = "https://formspree.io/f/xyzkpywz"
@@ -528,50 +556,89 @@ def sql_tips():
         time.sleep(2)
         exit()
 
+import plotext as plt  # Lightweight alternative to matplotlib
 
 def user_dashboard():
-    """Enhanced User Dashboard with progress bars and stylized menu"""
+    """Enhanced User Dashboard with error handling and progress visualization"""
     print_header()
+       try:
+        cursor.execute("SELECT id, level FROM users WHERE username=?", (USER,))
+        user_data = cursor.fetchone()  # ✅ Correct indentation
 
-    cursor.execute("SELECT level FROM users WHERE username=?", (USER,))
-    level = cursor.fetchone()[0]
+        
+        if not user_data:
+            console.print("[red]Error: User not found! Returning to main menu...[/red]")
+            time.sleep(2)
+            main_menu()
+            return
+        
+        user_id, level = user_data
 
-    cursor.execute("SELECT date, score FROM progress WHERE user=?", (USER,))
-    progress_data = cursor.fetchall()
-    total_score = sum([row[1] for row in progress_data])
-    avg_score = total_score / len(progress_data) if progress_data else 0
-    progress_percentage = min(int(avg_score), 100)  # User's average score as progress percentage
+        # Fetch progress data
+        cursor.execute("SELECT date, score FROM progress WHERE user_id=?", (user_id,))
+        progress_data = cursor.fetchall()
 
-    console.print(f"[bold green]Welcome back, {USER}![/bold green]")
-    console.print(f"[bold cyan]Current Level: {level}[/bold cyan]")
-    console.print(f"[bold yellow]Your Progress: {progress_percentage}%[/bold yellow]")
-    
-    # Progress bar for visual feedback on learning progress
-    with Progress() as progress:
-        task = progress.add_task("[cyan]Your Progress...", total=100)
-        progress.update(task, completed=progress_percentage)
+        if not progress_data:
+            console.print("[yellow]No progress data available yet. Start a quiz to track progress![/yellow]")
+            progress_data = []  # Ensure an empty list instead of None
+        
+        # Calculate total score & progress percentage
+        total_score = sum(row[1] for row in progress_data) if progress_data else 0
+        avg_score = total_score / len(progress_data) if progress_data else 0
+        progress_percentage = min(int(avg_score), 100)  # Normalize to 100%
 
-    # Display Menu with Stylized Options
-    console.print("\n[bold yellow]Main Menu[/bold yellow]")
-    console.print("[bold green][1] Practice Queries[/bold green] - Improve your SQL skills")
-    console.print("[bold blue][2] Take a Quiz[/bold blue] - Test your SQL knowledge")
-    console.print("[bold magenta][3] View My Profile[/bold magenta] - Track your progress")
-    console.print("[bold cyan][4] Help[/bold cyan] - Get assistance and tips")
-    console.print("[bold red][5] Logout[/bold red] - Exit and logout")
+        # Display User Information
+        console.print(f"[bold green]Welcome back, {user_id}![/bold green]")
+        console.print(f"[bold cyan]Current Level: {level}[/bold cyan]")
+        console.print(f"[bold yellow]Your Progress: {progress_percentage}%[/bold yellow]\n")
 
-    choice = Prompt.ask("Please choose an option", choices=["1", "2", "3", "4", "5"])
-    
-    # Navigate to the appropriate action based on the user's choice
-    if choice == "1":
-        execute_sql()
-    elif choice == "2":
-        sql_quiz()
-    elif choice == "3":
-        view_profile()
-    elif choice == "4":
-        help_section()
-    else:
-        logout()
+        # Display Progress Bar
+        with Progress() as progress:
+            task = progress.add_task("[cyan]Your Progress...", total=100)
+            progress.update(task, completed=progress_percentage)
+
+        # Show Score History Graph using `plotext`
+        if progress_data:
+            dates = [row[0] for row in progress_data]
+            scores = [row[1] for row in progress_data]
+
+            plt.scatter(dates, scores, marker="dot", color="blue", label="Quiz Scores")
+            plt.title(f"{user_id}'s Progress")
+            plt.xlabel("Date")
+            plt.ylabel("Score")
+            plt.show()
+        else:
+            console.print("[yellow]No quiz history to display graph![/yellow]\n")
+
+        # Leaderboard Section
+        show_leaderboard()
+
+        # Display Menu
+        console.print("\n[bold yellow]Main Menu[/bold yellow]")
+        console.print("[bold green][1] Practice Queries[/bold green] - Improve your SQL skills")
+        console.print("[bold blue][2] Take a Quiz[/bold blue] - Test your SQL knowledge")
+        console.print("[bold magenta][3] View My Profile[/bold magenta] - Track your progress")
+        console.print("[bold cyan][4] Help[/bold cyan] - Get assistance and tips")
+        console.print("[bold red][5] Logout[/bold red] - Exit and logout")
+
+        choice = Prompt.ask("Please choose an option", choices=["1", "2", "3", "4", "5"])
+        
+        if choice == "1":
+            execute_sql()
+        elif choice == "2":
+            sql_quiz()
+        elif choice == "3":
+            view_profile()
+        elif choice == "4":
+            help_section()
+        else:
+            logout()
+
+    except sqlite3.Error as e:
+        console.print(f"[red]Database Error: {e}[/red]")
+        time.sleep(2)
+        main_menu()
+
 
 
 def logout():
