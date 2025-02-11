@@ -147,6 +147,7 @@ Ensure Python is added to the **Windows PATH**. If not, reinstall Python and **c
 ---
 
 ## **4. Try SQL Database Graphical Version** 🎨  
+![Description of GIF](https://github.com/mishra9759harshit/SQL-DATABASE/raw/main/Screenshot's/1%20(4).png?raw=true)
 
 If you prefer a **GUI version**, try our **Graphical SQL Database Manager**!  
 
