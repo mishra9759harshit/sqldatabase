@@ -13,7 +13,7 @@ This is a **SQL Database program** designed to run in **Termux** on Android devi
 - **🔧 Developer-friendly**: Modify or extend the functionality as needed.
 ---
 ### Preview and Installion
-<img src="https://github.com/mishra9759harshit/Photos/blob/main/SQL%20Preview%20termux.gif" width="380" height="720" alt="Preview">
+<img src="https://github.com/mishra9759harshit/Photos/blob/main/SQL%20Preview%20termux.gif" width="380" height="720" alt="Preview"> [![⬇ PREVIEW FOR ANDROID ⬇](https://img.shields.io/badge/%E2%AC%87%20PREVIEW%20Full%20Screen-%2300C853?style=for-the-badge&logo=android&logoColor=white)](https://youtube.com/shorts/mEos6J--U_c?feature=shared)
 
 
 ---
