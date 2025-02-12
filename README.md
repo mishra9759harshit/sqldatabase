@@ -1,7 +1,10 @@
 
 
 # **SQL Database - Interactive SQL Learning & Practice Tool**  
-[![Watch the video](https://github.com/user-attachments/assets/906d4e8f-7a71-40d2-b29e-b7d5df4b96fe)](https://youtu.be/NJxkTJFRgvM)
+[![⬇ PREVIEW FOR ANDROID ⬇](https://img.shields.io/badge/%E2%AC%87%20PREVIEW%20FOR%20ANDROID-%2300C853?style=for-the-badge&logo=android&logoColor=white)](https://youtube.com/shorts/mEos6J--U_c)
+
+[![⬇ PREVIEW FOR WINDOWS ⬇](https://img.shields.io/badge/%E2%AC%87%20PREVIEW%20FOR%20WINDOWS-%230078D6?style=for-the-badge&logo=windows&logoColor=white)](https://youtu.be/NJxkTJFRgvM)
+
 
 
 The **SQL Database** is a powerful **cross-platform** SQL practice tool that enables users to **learn, execute, and improve SQL skills** with interactive features.  
