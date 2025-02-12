@@ -100,7 +100,6 @@ Install the required Python libraries listed in the `requirements.txt` file. If 
 ```bash
 pip install sqlite3
 pip install rich
-pip install matplotlib
 ```
 
 These dependencies are used for the program's SQL functionality, the interactive CLI, and visualizations.
