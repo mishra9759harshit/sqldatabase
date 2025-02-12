@@ -1,7 +1,7 @@
 ---
 
 # **SQL Database - Windows Setup Instructions**  
-![Description of GIF](https://github.com/mishra9759harshit/sqldatabase/blob/main/SQL%20database.gif)
+[![Watch the video](https://github.com/user-attachments/assets/906d4e8f-7a71-40d2-b29e-b7d5df4b96fe)](https://youtu.be/NJxkTJFRgvM)
 
 ## **Description**  
 
