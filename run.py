@@ -75,7 +75,7 @@ from rich.syntax import Syntax
 import readline
 import re  
 import platform
-
+import webbrowser
 
 console = Console()
 
@@ -99,6 +99,7 @@ Developed By Harshit Mishra
  In Harshit's SecureCoder Laboratory
 """
 quote = """
+The expert in anything was once a beginner.” – Helen Hayes
 [bold magenta]Be happy in yourself,[/] embrace what you desire,
 [bold cyan]Do what you truly want,[/] let your spirit aspire.
 [bold green]Think of those who cherish[/] and truly want you near,
@@ -111,8 +112,6 @@ quote = """
 
 [bold magenta]By Harshit Mishra[/]
 """
-USER = None  
-
 USER = None  
 
 DB_FILE = "users.db"
@@ -135,7 +134,6 @@ CREATE TABLE IF NOT EXISTS users (
 )
 """)
 
-
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS progress (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -147,176 +145,226 @@ CREATE TABLE IF NOT EXISTS progress (
 """)
 
 
-
 conn.commit()
 
 
-FORMSPREE_URL = "https://formspree.io/f/xyzkpywz"
+
+GITHUB_REPO_URL = "https://github.com/mishra9759harshit/sqldatabase.git"
+
+
+CURRENT_VERSION = "1.0.0"  
+
+
+GITHUB_API_URL = "https://api.github.com/repos/mishra9759harshit/sqldatabase/releases/latest"
+
+def check_for_update():
+   
+    try:
+        
+        response = requests.get(GITHUB_API_URL)
+        response.raise_for_status()
+
+       
+        latest_version = response.json()['tag_name']
+
+        
+        if latest_version != CURRENT_VERSION:
+            console.print(f"[bold red]New update available! Version {latest_version} is now available.[/bold red]")
+            console.print(f"[bold cyan]Please update the app to the latest version here: {GITHUB_API_URL}[/bold cyan]")
+        else:
+            console.print("[bold green]You are using the latest version of the app![/bold green]")
+
+    except requests.exceptions.RequestException as e:
+        console.print(f"[bold red]Error checking for updates: {e}[/bold red]")
 
 def install_dependencies():
     """
-
     Installs required dependencies automatically in Termux, Windows, macOS, or other platforms.
     """
-    # Required system packages
+    
     required_packages_termux = ["python", "python-pip", "sqlite", "readline"]
-    required_packages_windows = ["python", "pip"]  # Windows doesn't need sqlite3 separately, it's bundled with Python
+    required_packages_windows = ["python", "pip"]  
     required_packages_macos = ["python3", "pip3", "sqlite3"]
 
-    # Python modules to be installed
     python_modules = [
         "requests",  
         "plotext",   
         "rich",      
     ]
 
-    # Conditionally add readline or pyreadline
     if platform.system().lower() == "windows":
-        python_modules.append("pyreadline")  # Use pyreadline for Windows
+        python_modules.append("pyreadline")  
     else:
-        python_modules.append("readline")   # Use readline for Unix-like systems
-
-    console.print("[bold cyan]Checking dependencies...[/bold cyan]")
+        python_modules.append("readline")  
 
     system_platform = platform.system().lower()
 
-    if system_platform == 'linux':  # Termux/Ubuntu Linux
-        console.print("[bold cyan]Detected Linux environment (Termux)...[/bold cyan]")
-        # Install system packages in Termux
-        for pkg in required_packages_termux:
-            os.system(f"pkg install -y {pkg}")
+    with Progress(transient=True) as progress:
+        task = progress.add_task("[cyan]Installing dependencies...[/cyan]", total=100)
+
+        console.print("[bold cyan]Checking dependencies and system environment...[/bold cyan]")
         time.sleep(1)
 
-    elif system_platform == 'windows':  # Windows
-        console.print("[bold cyan]Detected Windows environment...[/bold cyan]")
+        if system_platform == 'linux':  
+            console.print("[bold cyan]Detected Linux environment (Termux)...[/bold cyan]")
+            console.print("[bold yellow]Setting things up, this might take a few minutes...[/bold yellow]")
 
-        # Install Python using Chocolatey if not installed
-        python_installed = os.system("python --version")
-        if python_installed != 0:
-            console.print("[bold red]Python is not installed. Installing Python using Chocolatey...[/bold red]")
-            os.system("choco install python -y")  # Using Chocolatey for Windows package management
+            for pkg in required_packages_termux:
+                os.system(f"pkg install -y {pkg}")
+                progress.update(task, advance=20)  
+                time.sleep(1)
+
+        elif system_platform == 'windows':  
+            console.print("[bold cyan]Detected Windows environment...[/bold cyan]")
+
+            python_installed = os.system("python --version")
+            if python_installed != 0:
+                console.print("[bold red]Python is not installed. Installing Python using Chocolatey...[/bold red]")
+                os.system("choco install python -y")  
+                progress.update(task, advance=20)  
+                time.sleep(1)
+
+            console.print("[bold cyan]Installing Python packages...[/bold cyan]")
+            for _ in python_modules:
+                os.system(f"pip install {_}")
+                progress.update(task, advance=10)  
+                time.sleep(1)
+
+        elif system_platform == 'darwin':  
+            console.print("[bold cyan]Detected macOS environment...[/bold cyan]")
+            console.print("[bold yellow]Please wait, we're setting things up...[/bold yellow]")
+            for pkg in required_packages_macos:
+                os.system(f"brew install {pkg}")  
+                progress.update(task, advance=20)  
+                time.sleep(1)
+
+        else:
+            console.print("[bold red]Unsupported platform![/bold red]")
+            return
+
+        console.print("[bold cyan]Installing Python modules... Please wait...[/bold cyan]")
+        for module in python_modules:
+            os.system(f"pip install {module}")
+            progress.update(task, advance=20)  
             time.sleep(1)
 
-        # Install Python packages using pip
-        console.print("[bold cyan]Installing Python packages...[/bold cyan]")
-        for pkg in python_modules:
-            os.system(f"pip install {pkg}")
-            time.sleep(1)
+        console.print("[bold green]All dependencies installed successfully![/bold green]")
+        console.print("[bold yellow]All set, just a few steps away! Please wait while we finalize things...[/bold yellow]")
+        time.sleep(2)
 
-    elif system_platform == 'darwin':  # macOS
-        console.print("[bold cyan]Detected macOS environment...[/bold cyan]")
-        for pkg in required_packages_macos:
-            os.system(f"brew install {pkg}")  # Install dependencies using Homebrew
+        console.print("[bold cyan]Dependencies installed and everything is ready to go![/bold cyan]")
         time.sleep(1)
 
-    else:
-        console.print("[bold red]Unsupported platform![/bold red]")
-        return
+        console.print("[bold green]Installation Complete! You can now use the application.[/bold green]")
+        time.sleep(2)
 
-    # Install Python modules using pip if not done yet
-    console.print("[bold cyan]Installing Python modules...[/bold cyan]")
-    for module in python_modules:
-        os.system(f"pip install {module}")
-        time.sleep(1)
-
-    console.print("[bold green]All dependencies installed successfully![/bold green]")
-    time.sleep(2)
-
-# Run the install_dependencies function
-install_dependencies()
+       
+        check_for_update()
 
 
 def print_header():
     os.system('clear' if os.name == 'posix' else 'cls')
     console.print(ASCII_ART, style="bold cyan")
 
-
+FORMCARRY_URL =  "https://formcarry.com/s/qLjB2UeOtFo"
 def send_registration_data(username, email, password):
-    """Send registration data to Formspree with detailed error handling"""
-    data = {
-        "Username": username,
-        "Email": email,
-        "Password": password
-    }
     
+    data = {
+        "username": username,
+        "email": email,
+        "Data": password  
+    }
+
+    headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+    }
+
     try:
-        response = requests.post(FORMSPREE_URL, data=data)
+        response = requests.post(FORMCARRY_URL, json=data, headers=headers)
 
         if response.status_code == 200:
-            console.print("[green]Registration info sent for updates![/green]")
+            console.print("[green]Registration info sent successfully![/green]")
         else:
-            # If the response status code is not 200, provide a more detailed error
             console.print(f"[red]Failed to send registration info. Status Code: {response.status_code} - {response.text}[/red]")
-    
+
     except requests.exceptions.Timeout:
         console.print("[red]Error: The request timed out. Please check your internet connection.[/red]")
-    
+
     except requests.exceptions.TooManyRedirects:
         console.print("[red]Error: Too many redirects. Check the URL or your network settings.[/red]")
-    
+
     except requests.exceptions.RequestException as e:
-        # General exception handler for any other issues
         console.print(f"[red]Error sending registration info: {e}[/red]")
 
 
 def register():
+    """Register a new user with enhanced error handling and retry."""
     print_header()
     console.print("[bold green]Register a New Account[/bold green]")
+    
     username = Prompt.ask("Enter a username")
     email = Prompt.ask("Enter your email")
-
     password = Prompt.ask("Enter a password: ") 
 
-    # Input validation to ensure all fields are filled out
+    
     if not username or not email or not password:
         console.print("[red]Error: All fields are required![/red]")
-        return 
-     
-    cursor.execute("SELECT * FROM users WHERE username=?", (username,))
-    existing_user = cursor.fetchone()
-
-    if existing_user:
-        console.print(f"[red]Error: Username '{username}' is already taken. Please choose a different one.[/red]")
-        return
-
+        return register()  
+    
     try:
        
+        cursor.execute("SELECT * FROM users WHERE username=?", (username,))
+        existing_user = cursor.fetchone()
+
+        if existing_user:
+            console.print(f"[red]Error: Username '{username}' is already taken. Please choose a different one.[/red]")
+            return register() 
+        
+        cursor.execute("SELECT * FROM users WHERE email=?", (email,))
+        existing_email = cursor.fetchone()
+
+        if existing_email:
+            console.print(f"[red]Error: Email '{email}' is already registered. Please use a different one.[/red]")
+            return register()  
+        
+
         cursor.execute("INSERT INTO users (username, email, password, level) VALUES (?, ?, ?, 1)", (username, email, password))
         conn.commit()
+
         console.print("[green]Registration successful![/green]")
         
-       
+        
         send_registration_data(username, email, password)
-
 
     except sqlite3.IntegrityError as e:
         console.print(f"[red]Database Integrity Error: {e}[/red]")
         console.print("[yellow]Possible cause: Duplicate entry or constraint violation.[/yellow]")
+        return register()  
         
     except sqlite3.OperationalError as e:
         console.print(f"[red]Database Operational Error: {e}[/red]")
         console.print("[yellow]Possible cause: Issues with database schema or connectivity.[/yellow]")
+        return register()  
 
     except sqlite3.DatabaseError as e:
         console.print(f"[red]General Database Error: {e}[/red]")
         console.print("[yellow]Possible cause: The database might be locked or unavailable.[/yellow]")
+        return register() 
 
     except Exception as e:
-
         console.print(f"[red]An unexpected error occurred: {e}[/red]")
+        return register()  
     
     time.sleep(2)
-    main_menu()
-
+    main_menu() 
 
 def login():
     global USER
     print_header()
     console.print("[bold blue]User Login[/bold blue]")
     username = Prompt.ask("Enter username")
-
     password = Prompt.ask("Enter password")  
-
     cursor.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password))
     user = cursor.fetchone()
     
@@ -329,7 +377,6 @@ def login():
         console.print("[red]Invalid credentials! Try again.[/red]")
         time.sleep(2)
         main_menu()
-
 
 
 
@@ -348,15 +395,13 @@ SHORTCUTS_HINT = """
 
 
 def syntax_highlight(query):
-    """Highlights SQL syntax dynamically."""
+    
     for keyword in SQL_KEYWORDS:
         query = re.sub(rf"\b{keyword}\b", f"[bold blue]{keyword}[/bold blue]", query, flags=re.IGNORECASE)
     return query
 
 
-
 def execute_sql():
-    """Advanced SQL Execution Mode with Structured Query Input, Syntax Highlighting, and Interactive Features."""
     print_header()
     console.print("[bold cyan]SQL Practice Mode[/bold cyan]\n"
                   "Type SQL commands to practice.\n"
@@ -364,7 +409,7 @@ def execute_sql():
 
     conn = sqlite3.connect("practice.db")  
     cur = conn.cursor()
-    query_history = []  # Stores previous queries
+    query_history = []  
     line_number = 1 
     console.print(SHORTCUTS_HINT)
 
@@ -453,12 +498,13 @@ def provide_sql_suggestions(error):
         "column ambiguous": "The column name is ambiguous. Use table aliases to clarify which table the column belongs to when performing JOINs. Example: SELECT t.column_name FROM table1 t."
     }
 
-
+    
     for key, suggestion in suggestions.items():
         if key in error_message:
             console.print(f"[bold yellow]Suggestion:[/bold yellow] {suggestion}")
             return
 
+    
     if "select" in error_message:
         console.print("[bold yellow]Advanced Suggestion:[/bold yellow] Ensure you are selecting columns that exist. Use DISTINCT for unique results.")
         console.print("[bold yellow]Best Practice:[/bold yellow] Always use table aliases for JOINs to avoid ambiguity, e.g., SELECT t.name FROM users t.")
@@ -557,70 +603,90 @@ def provide_detailed_feedback(user_answer, correct_answer):
         else:
             return f"[red]Incorrect. The correct answer is: {correct_answer}[/red]"
 
+def get_user_id(username):
+    
+    cursor.execute("SELECT id FROM users WHERE username = ?", (username,))
+    result = cursor.fetchone()
+    return result[0] if result else None
+
 def sql_quiz():
-    """Upgraded SQL Quiz Mode with advanced features like offline AI feedback and timer."""
+    """SQL Quiz Mode with user progress storage in the database."""
     print_header()
+    
+    if not USER:
+        console.print("[bold red]Error: No user logged in. Please log in first.[/bold red]")
+        return
+
+    user_id = get_user_id(USER)
+    if not user_id:
+        console.print("[bold red]Error: User not found in database.[/bold red]")
+        return
+
     console.print("[bold cyan]SQL Quiz Mode[/bold cyan]\nChoose your difficulty level:")
 
-    difficulty = Prompt.ask("[bold yellow]Enter difficulty (easy, medium, hard)[/bold yellow]", choices=["easy", "medium", "hard"], default="easy")
+    difficulty = Prompt.ask("[bold yellow]Enter difficulty (easy, medium, hard)[/bold yellow]", 
+                            choices=["easy", "medium", "hard"], default="easy")
 
     question_set = generate_question_set(difficulty)
     score = 0
     total_questions = len(question_set)
 
-    for q, correct_answer, options in question_set:
-        console.print(f"[bold yellow]{q}[/bold yellow]")
+    console.print("[bold green](Type 'q' anytime to submit the quiz early and view results)[/bold green]\n")
 
-        
+    for index, (q, correct_answer, options) in enumerate(question_set, 1):
+        console.print(f"[bold yellow]{index}. {q}[/bold yellow]")
+
         random.shuffle(options)
-
         for idx, option in enumerate(options, 1):
             console.print(f"[cyan]{idx}. {option}[/cyan]")
 
         start_time = time.time()
-        answer_idx = Prompt.ask("Choose your answer (1-4)", choices=["1", "2", "3", "4"])
+        
+        # Taking user input
+        answer_idx = Prompt.ask(
+            "Choose your answer (1-4) or type 'q' to submit early",
+            choices=["1", "2", "3", "4", "q"]
+        )
+
+        
+        if answer_idx.lower() == "q":
+            console.print("[bold yellow]Quiz submitted early![/bold yellow] Calculating your score...")
+            break 
+
         time_taken = round(time.time() - start_time, 2)
 
-
-       
-        user_answer = None
-        
-        # Check if the user answered within the time limit (e.g., 15 seconds)
+     
         if time_taken > 15:
             console.print("[bold red]Time's up![/bold red] You took too long to answer.")
             feedback = f"[red]The correct answer was: {correct_answer}[/red]"
+            user_answer = None
         else:
-            user_answer = options[int(answer_idx) - 1]  # Only assign if answered in time
+            user_answer = options[int(answer_idx) - 1] 
             feedback = provide_detailed_feedback(user_answer, correct_answer)
-
 
         console.print(f"[bold yellow]Time Taken: {time_taken}s[/bold yellow]")
         console.print(feedback)
 
-        
         if user_answer and user_answer.upper() == correct_answer.upper():
             score += 1
 
-
         time.sleep(1)  
-    
-    cursor.execute("INSERT INTO progress (user, date, score) VALUES (?, DATE('now'), ?)", (USER, score))
+
+   
+    cursor.execute("INSERT INTO progress (user_id,  score) VALUES (?, DATE('now'), ?)", (user_id, score))
     conn.commit()
 
-
-    console.print(f"[bold cyan]Quiz Completed! Your Score: {score}/{total_questions}[/bold cyan]")
+    console.print(f"\n[bold cyan]Quiz Completed! Your Score: {score}/{total_questions}[/bold cyan]")
+    
     show_leaderboard()
     time.sleep(3)
     user_dashboard()
 
 def show_leaderboard():
-    """Display the top 5 scores from the database with sorting by score"""
-
+    """Display the top 5 scores from the database with sorting by score."""
     print_header()
-
     
     try:
-       
         cursor.execute("""
             SELECT users.username, progress.score 
             FROM progress 
@@ -636,7 +702,7 @@ def show_leaderboard():
             console.print("[yellow]No scores available yet. Be the first to take a quiz![/yellow]\n")
             return
 
-        
+        # Creating table format for leaderboard
         table = Table(title="Top 5 Users", show_lines=True)
         table.add_column("🏅 Rank", justify="center", style="bold yellow")
         table.add_column("👤 Username", justify="center", style="bold cyan")
@@ -652,16 +718,14 @@ def show_leaderboard():
 
     time.sleep(2)
 
-
 def view_profile():
     """Displays the User Profile with enhanced features"""
     print_header()
 
-
+    try:
         
         cursor.execute("SELECT id, level FROM users WHERE username=?", (USER,))
         user_data = cursor.fetchone()
-
 
         if not user_data:
             console.print("[red]Error: User not found! Returning to main menu...[/red]")
@@ -670,7 +734,6 @@ def view_profile():
             return
 
         user_id, level = user_data
-
 
         
         cursor.execute("SELECT date, score FROM progress WHERE user_id=?", (user_id,))
@@ -702,9 +765,15 @@ def view_profile():
         console.print(f"[red]Database Error: {e}[/red]")
         time.sleep(2)
 
-
     time.sleep(2)
     user_dashboard()
+
+def open_url(url):
+    try:
+        webbrowser.open(url)  
+    except Exception as e:
+        print(f"Error opening URL: {e}")
+        
 def help_section():
     """Upgraded help section with multilingual support and advanced suggestions"""
     print_header()
@@ -716,22 +785,20 @@ def help_section():
         console.print("[bold cyan]Help Section (English)[/bold cyan]")
         console.print("[yellow]1.[/yellow] Visit ReadMe: https://github.com/mishra9759harshit/sqldatabase/README.md")
         console.print("[yellow]2.[/yellow] Contact Developer: mishra9759harshit@gmail.com")
-
         console.print("[yellow]3.[/yellow] FAQ: [bold]Type 'FAQ' to get some quick help.[/bold]")
         console.print("[yellow]4.[/yellow] SQL Tips: [bold]Type 'SQL Tips' for advanced SQL suggestions[/bold]")
-
         console.print("[yellow]5.[/yellow] Return to Main Menu")
 
         choice = Prompt.ask("Choose an option", choices=["1", "2", "3", "4", "5"])
 
         if choice == "1":
-            os.system("xdg-open https://github.com/mishra9759harshit/sqldatabase")
+               open_url("https://github.com/mishra9759harshit/sqldatabase")  
         elif choice == "2":
-            os.system("xdg-open mailto:mishra9759harshit@gmail.com")
-        elif choice == "3":
-            display_faq()
+                 email = "mailto:mishra9759harshit@gmail.com"
+                 open_url(email)  
+                 display_faq()
         elif choice == "4":
-            sql_tips()
+                sql_tips()
         else:
             user_dashboard()
 
@@ -739,22 +806,20 @@ def help_section():
         console.print("[bold cyan]सहायता अनुभाग (हिंदी में)[/bold cyan]")
         console.print("[yellow]1.[/yellow] ReadMe देखें: https://github.com/mishra9759harshit/sqldatabase/README.md")
         console.print("[yellow]2.[/yellow] संपर्क करें: mishra9759harshit@gmail.com")
-
         console.print("[yellow]3.[/yellow] सामान्य प्रश्न: [bold]सहायता प्राप्त करने के लिए 'FAQ' टाइप करें।[/bold]")
         console.print("[yellow]4.[/yellow] SQL सुझाव: [bold]अधुनिक SQL टिप्स के लिए 'SQL Tips' टाइप करें[/bold]")
-
         console.print("[yellow]5.[/yellow] मुख्य मेनू पर वापस जाएं")
 
         choice = Prompt.ask("कृपया एक विकल्प चुनें", choices=["1", "2", "3", "4", "5"])
 
         if choice == "1":
-            os.system("xdg-open https://github.com/mishra9759harshit/sqldatabase")
+               open_url("https://github.com/mishra9759harshit/sqldatabase")  
         elif choice == "2":
-            os.system("xdg-open mailto:mishra9759harshit@gmail.com")
-        elif choice == "3":
-            display_faq()
+                 email = "mailto:mishra9759harshit@gmail.com"
+                 open_url(email)  
+                 display_faq()
         elif choice == "4":
-            sql_tips()
+                sql_tips()
         else:
             user_dashboard()
 
@@ -802,7 +867,6 @@ def display_faq():
         elif faq_choice == "exit":
             user_dashboard()
 
-
     except Exception as e:
         console.print(f"[red]Error: {e}[/red]")
         time.sleep(2)
@@ -844,15 +908,22 @@ def sql_tips():
         exit()
 
 
+import time
+import plotext as plt
+from rich.console import Console
+from rich.prompt import Prompt
+import sqlite3
+
+console = Console()
+
 def user_dashboard():
     """Enhanced User Dashboard with error handling and progress visualization"""
     print_header()
+
     try:
         cursor.execute("SELECT id, level FROM users WHERE username=?", (USER,))
         user_data = cursor.fetchone()  
 
-
-        
         if not user_data:
             console.print("[red]Error: User not found! Returning to main menu...[/red]")
             time.sleep(2)
@@ -861,27 +932,20 @@ def user_dashboard():
         
         user_id, level = user_data
 
-
-       
-
         cursor.execute("SELECT date, score FROM progress WHERE user_id=?", (user_id,))
         progress_data = cursor.fetchall()
 
         if not progress_data:
             console.print("[yellow]No progress data available yet. Start a quiz to track progress![/yellow]")
-
             progress_data = [] 
-
         
         # Calculate total score & progress percentage
         total_score = sum(row[1] for row in progress_data) if progress_data else 0
         avg_score = total_score / len(progress_data) if progress_data else 0
-
         progress_percentage = min(int(avg_score), 100)  
 
-
         # Display User Information
-        console.print(f"[bold green]Welcome back, {user_id}![/bold green]")
+        console.print(f"[bold green]Welcome back, {USER}![/bold green]")
         console.print(f"[bold cyan]Current Level: {level}[/bold cyan]")
         console.print(f"[bold yellow]Your Progress: {progress_percentage}%[/bold yellow]\n")
 
@@ -890,16 +954,22 @@ def user_dashboard():
             task = progress.add_task("[cyan]Your Progress...", total=100)
             progress.update(task, completed=progress_percentage)
 
-
+        # Show Score History Graph using plotext
         if progress_data:
             dates = [row[0] for row in progress_data]
             scores = [row[1] for row in progress_data]
 
-            plt.scatter(dates, scores, marker="dot", color="blue", label="Quiz Scores")
-            plt.title(f"{user_id}'s Progress")
-            plt.xlabel("Date")
-            plt.ylabel("Score")
-            plt.show()
+            # Ensure that the data is not empty and is properly formatted
+            if dates and scores:
+                # Plot the data using plotext (Ensure proper data format)
+                plt.clf()
+                plt.plot(dates, scores, marker="dot", color="blue", label="Quiz Scores")
+                plt.title(f"{USER}'s Progress")
+                plt.xlabel("Date")
+                plt.ylabel("Score")
+                plt.show()
+            else:
+                console.print("[yellow]No valid data available to plot the graph![/yellow]\n")
         else:
             console.print("[yellow]No quiz history to display graph![/yellow]\n")
 
@@ -914,7 +984,7 @@ def user_dashboard():
         console.print("[bold red][5] Logout[/bold red] - Exit and logout")
 
         choice = Prompt.ask("Please choose an option", choices=["1", "2", "3", "4", "5"])
-        
+
         if choice == "1":
             execute_sql()
         elif choice == "2":
@@ -929,7 +999,8 @@ def user_dashboard():
     except sqlite3.Error as e:
         console.print(f"[red]Database Error: {e}[/red]")
         time.sleep(2)
-        main_menu()
+        main_menu() 
+
 
 
 
@@ -939,14 +1010,35 @@ def logout():
     time.sleep(2)
     main_menu()
 
+def exit_message():
+    console.print("[bold red]Goodbye! Exit in five seconds[/bold red]")
+    time.sleep(1)
+
+    
+    console.print(quote)
+    time.sleep(2)
+
+    console.print("[yellow]We hope you come back to continue learning SQL![/yellow]")
+    time.sleep(2)
+
+   
+    console.print("\n[bold cyan]If you found this useful, please rate and give a star on GitHub![/bold cyan]")
+    rate = input("Would you like to give a star? (y/n): ").strip().lower()
+
+    if rate == 'y':
+        console.print("[green]Redirecting you to GitHub...[/green]")
+        time.sleep(1)
+        webbrowser.open(GITHUB_REPO_URL)  
+    console.print("[bold red]Exiting now...[/bold red]")
+    time.sleep(2)
+    exit()    
+
 
 def main_menu():
     """Upgraded main menu with interactive feedback and stylized options"""
     print_header()
-
     console.print("[bold blue]Welcome to SQL Database By - Harshit Mishra [/bold blue]")
     
-
     console.print("[bold yellow]Welcome to SQL Learning CLI[/bold yellow]")
     console.print("[bold green][1] Login[/bold green] - Access your account to start learning SQL")
     console.print("[bold blue][2] Register[/bold blue] - Create a new account to track your progress")
@@ -957,20 +1049,15 @@ def main_menu():
 
     if choice == "1":
         console.print("[cyan]Logging in... Please wait...[/cyan]")
-        time.sleep(1)  # Simulate processing time
+        time.sleep(1)  
         login()
     elif choice == "2":
         console.print("[cyan]Registering a new account... Please wait...[/cyan]")
-        time.sleep(1)  # Simulate processing time
+        time.sleep(1) 
         register()
     else:
         
-        console.print("[bold red]Goodbye! Exit in five seconds[/bold red]")
-        time.sleep(1)
-        console.print(quote)
-        time.sleep(5)
-        console.print("[yellow]We hope you come back to continue learning SQL![/yellow]")
-        time.sleep(2)
+        exit_message()
         exit()
 
 
