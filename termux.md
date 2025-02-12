@@ -1,5 +1,6 @@
 # SQLDatabase Termux Program
 
+
 ![SQLDatabase Termux](https://img.shields.io/badge/SQL--Database%20Termux-Program-blue)
 
 This is a **SQL Database program** designed to run in **Termux** on Android devices. The program allows you to interact with SQL databases directly from your phone using Python. It features a **simple, interactive command-line interface (CLI)** to practice SQL queries, take quizzes, and track your progress.
@@ -10,6 +11,10 @@ This is a **SQL Database program** designed to run in **Termux** on Android devi
 - **📝 SQL Quiz Mode**: Test your knowledge with an interactive quiz.
 - **📊 Progress Tracking**: Track your learning progress with visual graphs.
 - **🔧 Developer-friendly**: Modify or extend the functionality as needed.
+---
+### Preview and Installion
+<img src="https://github.com/mishra9759harshit/Photos/blob/main/SQL%20Preview%20termux.gif" width="380" height="720" alt="Preview">
+
 
 ---
 
