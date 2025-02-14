@@ -39,6 +39,13 @@ The **SQL Database** is a powerful **cross-platform** SQL practice tool that ena
 🎨 **Graphical Mode** *(Windows Only)* – Use an **interactive UI** for SQL practice  
 
 ---
+### 🚀 Talk with My AI Assistant  
+
+[![AI Assistant](https://img.shields.io/badge/🤖%20Chat%20with%20My%20assistant-0078D4?style=for-the-badge&logo=ai&logoColor=white)](https://t.me/Intelligent_Real_Time_Assist_bot)
+<a href="https://t.me/Intelligent_Real_Time_Assist_bot">
+    <img src="https://github.com/user-attachments/assets/e5c82e74-2777-4a71-865c-8e89800e5c6a" alt="Assistant" width="90" height="90">
+</a>
+---
 
 ## **👨‍💻 Developer Info**  
 
