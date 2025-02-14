@@ -94,16 +94,9 @@ cd sqldatabase
 ---
 
 ### **6. Install Python Dependencies**
+**"No Need to Install Manually Just Skip It. I added a Powerfull ability to Install all automatically."**
 
-Install the required Python libraries listed in the `requirements.txt` file. If no `requirements.txt` exists, manually install the necessary packages:
-
-```bash
-pip install sqlite3
-pip install rich
-```
-
-These dependencies are used for the program's SQL functionality, the interactive CLI, and visualizations.
-
+👇🏻
 ---
 
 ### **7. Run the Program**
