@@ -58,7 +58,13 @@
 # 8. Acknowledgements:
 #    - The Software may include contributions from multiple developers or organizations. These contributions are acknowledged in the appropriate sections (e.g., documentation, credits).
 # By using or modifying the Software, you agree to comply with the terms of the MIT License and the conditions of use and modification stated above. If you disagree, you may not use or distribute the Software.
+"""Project Start Date - 30-01-2025 
+I am Harshit Mishra, and on January 30th 2025, I embarked on this project as an opportunity to practice and deepen my understanding of Python. The core idea behind my project is to assist students who do not have access to computers, providing them with a platform to practice and learn SQL databases. Although this is a complex and new challenge for me, I am determined to see it through and believe that I can achieve success.
 
+I humbly request that you respect my hard work and the time I have dedicated to this project. Please refrain from stealing or misusing my efforts. Your support in making this project a success is greatly appreciated.
+
+Thank you for your understanding, and I look forward to collaborating with others to make this an outstanding and valuable resource.
+"""
 import sqlite3
 import os
 import time
