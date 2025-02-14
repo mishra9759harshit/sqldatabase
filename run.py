@@ -76,6 +76,7 @@ import readline
 import re  
 import platform
 import webbrowser
+import subprocess
 
 console = Console()
 
@@ -177,90 +178,82 @@ def check_for_update():
     except requests.exceptions.RequestException as e:
         console.print(f"[bold red]Error checking for updates: {e}[/bold red]")
 
+
 def install_dependencies():
     """
     Installs required dependencies automatically in Termux, Windows, macOS, or other platforms.
     """
-    
+
     required_packages_termux = ["python", "python-pip", "sqlite", "readline"]
-    required_packages_windows = ["python", "pip"]  
+    required_packages_windows = ["python", "pip"]
     required_packages_macos = ["python3", "pip3", "sqlite3"]
 
-    python_modules = [
-        "requests",  
-        "plotext",   
-        "rich",      
-    ]
-
-    if platform.system().lower() == "windows":
-        python_modules.append("pyreadline")  
-    else:
-        python_modules.append("readline")  
+    python_modules = ["requests", "plotext", "rich"]
 
     system_platform = platform.system().lower()
 
-    with Progress(transient=True) as progress:
-        task = progress.add_task("[cyan]Installing dependencies...[/cyan]", total=100)
+    if system_platform == "windows":
+        python_modules.append("pyreadline")
+    else:
+        python_modules.append("readline")
 
-        console.print("[bold cyan]Checking dependencies and system environment...[/bold cyan]")
+    with Progress(transient=True) as progress:
+        task = progress.add_task("[cyan]Checking system environment...[/cyan]", total=100)
+        console.print("\n[bold cyan]📡 Detecting system environment...[/bold cyan]")
         time.sleep(1)
 
-        if system_platform == 'linux':  
-            console.print("[bold cyan]Detected Linux environment (Termux)...[/bold cyan]")
-            console.print("[bold yellow]Setting things up, this might take a few minutes...[/bold yellow]")
-
+        if system_platform == "linux":  
+            console.print("\n[bold cyan]🐧 Linux/Termux detected! Installing dependencies...[/bold cyan]")
             for pkg in required_packages_termux:
                 os.system(f"pkg install -y {pkg}")
-                progress.update(task, advance=20)  
+                progress.update(task, advance=20)
                 time.sleep(1)
 
-        elif system_platform == 'windows':  
-            console.print("[bold cyan]Detected Windows environment...[/bold cyan]")
+        elif system_platform == "windows":  
+            console.print("\n[bold cyan]🖥️ Windows detected! Installing dependencies...[/bold cyan]")
 
-            python_installed = os.system("python --version")
-            if python_installed != 0:
-                console.print("[bold red]Python is not installed. Installing Python using Chocolatey...[/bold red]")
-                os.system("choco install python -y")  
-                progress.update(task, advance=20)  
+            try:
+                python_installed = subprocess.run(["python", "--version"], capture_output=True, text=True)
+                if python_installed.returncode != 0:
+                    console.print("[bold red]🚨 Python is not installed! Installing via Chocolatey...[/bold red]")
+                    os.system("choco install python -y")
+                    progress.update(task, advance=20)
+                    time.sleep(1)
+            except Exception:
+                console.print("[red]❌ Chocolatey is missing! Install Python manually from python.org.[/red]")
+                return
+
+            console.print("[bold yellow]📦 Installing Python packages...[/bold yellow]")
+            for module in python_modules:
+                os.system(f"pip install {module}")
+                progress.update(task, advance=10)
                 time.sleep(1)
 
-            console.print("[bold cyan]Installing Python packages...[/bold cyan]")
-            for _ in python_modules:
-                os.system(f"pip install {_}")
-                progress.update(task, advance=10)  
-                time.sleep(1)
-
-        elif system_platform == 'darwin':  
-            console.print("[bold cyan]Detected macOS environment...[/bold cyan]")
-            console.print("[bold yellow]Please wait, we're setting things up...[/bold yellow]")
+        elif system_platform == "darwin":  
+            console.print("\n[bold cyan]🍏 macOS detected! Installing dependencies...[/bold cyan]")
             for pkg in required_packages_macos:
-                os.system(f"brew install {pkg}")  
-                progress.update(task, advance=20)  
+                os.system(f"brew install {pkg}")
+                progress.update(task, advance=20)
                 time.sleep(1)
 
         else:
-            console.print("[bold red]Unsupported platform![/bold red]")
+            console.print("[bold red]❌ Unsupported platform detected![/bold red]")
             return
 
-        console.print("[bold cyan]Installing Python modules... Please wait...[/bold cyan]")
+        console.print("\n[bold cyan]🛠 Installing required Python modules...[/bold cyan]")
         for module in python_modules:
             os.system(f"pip install {module}")
-            progress.update(task, advance=20)  
+            progress.update(task, advance=20)
             time.sleep(1)
 
-        console.print("[bold green]All dependencies installed successfully![/bold green]")
-        console.print("[bold yellow]All set, just a few steps away! Please wait while we finalize things...[/bold yellow]")
+        console.print("\n[bold green]✅ All dependencies installed successfully![/bold green]")
+        console.print("[bold yellow]🎯 Finalizing setup...[/bold yellow]")
         time.sleep(2)
 
-        console.print("[bold cyan]Dependencies installed and everything is ready to go![/bold cyan]")
+        console.print("[bold cyan]🚀 Ready to go![/bold cyan]")
         time.sleep(1)
 
-        console.print("[bold green]Installation Complete! You can now use the application.[/bold green]")
-        time.sleep(2)
-
-       
         check_for_update()
-
 
 def print_header():
     os.system('clear' if os.name == 'posix' else 'cls')
@@ -400,79 +393,113 @@ def syntax_highlight(query):
         query = re.sub(rf"\b{keyword}\b", f"[bold blue]{keyword}[/bold blue]", query, flags=re.IGNORECASE)
     return query
 
+# I fixed issue with Enter now when user click on enter goto next line till ; not enterd
 
+active_database = "practice.db"
 def execute_sql():
+    global active_database
+
     print_header()
-    console.print("[bold cyan]SQL Practice Mode[/bold cyan]\n"
+    console.print("[bold cyan]SQL Practice Mode (I Spend Three days to make this function!)[/bold cyan]\n"
                   "Type SQL commands to practice.\n"
                   "[red]Type 'exit()' to go back or use shortcuts (CTRL + M for Main Menu, CTRL + H for History).[/red]")
 
-    conn = sqlite3.connect("practice.db")  
+    conn = sqlite3.connect(active_database)
     cur = conn.cursor()
-    query_history = []  
-    line_number = 1 
+    query_history = []
+    line_number = 1
     console.print(SHORTCUTS_HINT)
 
+    multi_line_query = []  
+
     while True:
-        query = Prompt.ask(f"[bold yellow]SQL [{line_number}][/bold yellow] > ")
-        if query.lower() in ["exit()", "ctrl + q"]:
+        line = Prompt.ask(f"[bold yellow]SQL [{line_number}][/bold yellow] > ")
+
+        if line.lower() in ["exit()", "ctrl + q"]:
             break
-        if query.lower() in ["history", "ctrl + h"]:
+        if line.lower() in ["history", "ctrl + h"]:
             console.print("[bold yellow]Query History:[/bold yellow]")
             for i, q in enumerate(query_history, start=1):
-                console.print(f"[bold cyan]{i}.[/bold cyan] {syntax_highlight(q)}")
+                console.print(f"[bold cyan]{i}.[/bold cyan] {q}")
             continue
-        if query.lower() in ["main menu", "ctrl + m"]:
+        if line.lower() in ["main menu", "ctrl + m"]:
             main_menu()
             return
 
-        query_history.append(query)
-        line_number += 1 
-        start_time = time.time()  
+        multi_line_query.append(line.strip())
 
-        try:
-            cur.execute(query)  
-            rows = cur.fetchall()
-            execution_time = round(time.time() - start_time, 4)
+        if line.strip().endswith(";"):  
+            query = " ".join(multi_line_query).strip()  
+            multi_line_query = []  
+            line_number += 1  
 
-            if cur.description:  
-                table = Table(title=f"Query Output (Executed in {execution_time} sec)", show_lines=True)
-                
-                
-                for col in cur.description:
-                    table.add_column(col[0], justify="center")
+            if query.lower().startswith("create database "):
+                db_name = query.split(" ")[2].replace(";", "").strip()
+                try:
+                    with sqlite3.connect(f"{db_name}.db"):
+                        console.print(f"[green]Database '{db_name}' created successfully![/green]")
+                except sqlite3.Error as e:
+                    console.print(f"[red]Error: {e}[/red]")
+                continue
 
-                
-                for row in rows:
-                    table.add_row(*[str(item) for item in row])
+            elif query.lower().startswith("connect "):
+                db_name = query.split(" ")[1].replace(";", "").strip()
+                try:
+                    conn.close()
+                    active_database = f"{db_name}.db"
+                    conn = sqlite3.connect(active_database)
+                    cur = conn.cursor()
+                    console.print(f"[green]Connected to database '{db_name}'![/green]")
+                except sqlite3.Error as e:
+                    console.print(f"[red]Error: {e}[/red]")
+                continue
 
-                console.print(table)
+            elif query.lower().startswith("drop database "):
+                db_name = query.split(" ")[2].replace(";", "").strip()
+                import os
+                try:
+                    os.remove(f"{db_name}.db")
+                    console.print(f"[green]Database '{db_name}' deleted successfully![/green]")
+                except FileNotFoundError:
+                    console.print(f"[red]Error: Database '{db_name}' not found![/red]")
+                continue
 
-            else:
-                console.print(f"[green]Query executed successfully in {execution_time} sec![/green]")
+            query_history.append(query)
+            start_time = time.time()
 
-            
-            match = re.match(r"SELECT \* FROM (\w+)", query, re.IGNORECASE)
-            if match:
-                table_name = match.group(1)
-                cur.execute(f"PRAGMA table_info({table_name})")
-                columns = cur.fetchall()
-                if columns:
-                    table_info = Table(title=f"Table Structure: {table_name}", show_lines=True)
-                    table_info.add_column("Column ID", justify="center")
-                    table_info.add_column("Column Name", justify="center")
-                    table_info.add_column("Data Type", justify="center")
+            try:
+                cur.execute(query)
+                rows = cur.fetchall()
+                execution_time = round(time.time() - start_time, 4)
 
-                    for col in columns:
-                        table_info.add_row(str(col[0]), col[1], col[2])
-
-                    console.print(table_info)
+                if cur.description:
+                    table = Table(title=f"Query Output (Executed in {execution_time} sec)", show_lines=True)
+                    for col in cur.description:
+                        table.add_column(col[0], justify="center")
+                    for row in rows:
+                        table.add_row(*[str(item) for item in row])
+                    console.print(table)
                 else:
-                    console.print(f"[red]Error: Table '{table_name}' not found![/red]")
+                    console.print(f"[green]Query executed successfully in {execution_time} sec![/green]")
 
-        except sqlite3.Error as e:
-            console.print(f"[red]Error: {e}[/red]")
-            provide_sql_suggestions(e)
+                match = re.match(r"SELECT \* FROM (\w+)", query, re.IGNORECASE)
+                if match:
+                    table_name = match.group(1)
+                    cur.execute(f"PRAGMA table_info({table_name})")
+                    columns = cur.fetchall()
+                    if columns:
+                        table_info = Table(title=f"Table Structure: {table_name}", show_lines=True)
+                        table_info.add_column("Column ID", justify="center")
+                        table_info.add_column("Column Name", justify="center")
+                        table_info.add_column("Data Type", justify="center")
+                        for col in columns:
+                            table_info.add_row(str(col[0]), col[1], col[2])
+                        console.print(table_info)
+                    else:
+                        console.print(f"[red]Error: Table '{table_name}' not found![/red]")
+
+            except sqlite3.Error as e:
+                console.print(f"[red]Error: {e}[/red]")
 
     conn.commit()
     conn.close()
@@ -684,6 +711,7 @@ def sql_quiz():
 
 def show_leaderboard():
     """Display the top 5 scores from the database with sorting by score."""
+    #Strugle hard to fix issue's in this code now all set!
     print_header()
     
     try:
@@ -769,59 +797,70 @@ def view_profile():
     user_dashboard()
 
 def open_url(url):
+    """Open a URL in the default web browser, with cross-platform support for Termux."""
     try:
-        webbrowser.open(url)  
+        system = platform.system().lower()
+        if "android" in system:  
+            subprocess.run(["termux-open", url], check=True)
+        else:
+            webbrowser.open(url)
+        console.print(f"[green]Opened: {url}[/green]")
     except Exception as e:
-        print(f"Error opening URL: {e}")
-        
+        console.print(f"[red]Error opening URL: {e}[/red]")
+
+def send_email(email):
+    """Open the default email client, with error handling."""
+    try:
+        mailto_link = f"mailto:{email}"
+        webbrowser.open(mailto_link)
+        console.print(f"[green]Opening email client to contact: {email}[/green]")
+    except Exception as e:
+        console.print(f"[red]Error opening email client: {e}[/red]")
+
 def help_section():
-    """Upgraded help section with multilingual support and advanced suggestions"""
+    """Upgraded help section with multilingual support and better error handling. Take's 2 hour's"""
     print_header()
     
-    # Ask the user for language preference (English or Hindi)
-    language = Prompt.ask("[bold yellow]Select Language / भाषा चुनें: [bold green]1. English 2. Hindi[/bold green]", choices=["1", "2"])
-    
-    if language == "1":
-        console.print("[bold cyan]Help Section (English)[/bold cyan]")
-        console.print("[yellow]1.[/yellow] Visit ReadMe: https://github.com/mishra9759harshit/sqldatabase/README.md")
-        console.print("[yellow]2.[/yellow] Contact Developer: mishra9759harshit@gmail.com")
-        console.print("[yellow]3.[/yellow] FAQ: [bold]Type 'FAQ' to get some quick help.[/bold]")
-        console.print("[yellow]4.[/yellow] SQL Tips: [bold]Type 'SQL Tips' for advanced SQL suggestions[/bold]")
-        console.print("[yellow]5.[/yellow] Return to Main Menu")
+    try:
+        language = Prompt.ask("[bold yellow]Select Language / भाषा चुनें: [bold green]1. English 2. हिंदी[/bold green]", choices=["1", "2"])
 
-        choice = Prompt.ask("Choose an option", choices=["1", "2", "3", "4", "5"])
+        if language == "1":
+            console.print("[bold cyan]Help Section (English)[/bold cyan]")
+            options = {
+                "1": "Visit ReadMe",
+                "2": "Contact Developer",
+                "3": "FAQ",
+                "4": "SQL Tips",
+                "5": "Return to Main Menu"
+            }
+        else:
+            console.print("[bold cyan]सहायता अनुभाग (हिंदी में)[/bold cyan]")
+            options = {
+                "1": "ReadMe देखें",
+                "2": "संपर्क करें",
+                "3": "सामान्य प्रश्न",
+                "4": "SQL सुझाव",
+                "5": "मुख्य मेनू पर वापस जाएं"
+            }
+
+        for key, value in options.items():
+            console.print(f"[yellow]{key}.[/yellow] {value}")
+
+        choice = Prompt.ask("Choose an option / कृपया एक विकल्प चुनें", choices=options.keys())
 
         if choice == "1":
-               open_url("https://github.com/mishra9759harshit/sqldatabase")  
+            open_url("https://github.com/mishra9759harshit/sqldatabase")
         elif choice == "2":
-                 email = "mailto:mishra9759harshit@gmail.com"
-                 open_url(email)  
-                 display_faq()
+            send_email("mishra9759harshit@gmail.com")
+        elif choice == "3":
+            display_faq()
         elif choice == "4":
-                sql_tips()
+            sql_tips()
         else:
             user_dashboard()
 
-    else:
-        console.print("[bold cyan]सहायता अनुभाग (हिंदी में)[/bold cyan]")
-        console.print("[yellow]1.[/yellow] ReadMe देखें: https://github.com/mishra9759harshit/sqldatabase/README.md")
-        console.print("[yellow]2.[/yellow] संपर्क करें: mishra9759harshit@gmail.com")
-        console.print("[yellow]3.[/yellow] सामान्य प्रश्न: [bold]सहायता प्राप्त करने के लिए 'FAQ' टाइप करें।[/bold]")
-        console.print("[yellow]4.[/yellow] SQL सुझाव: [bold]अधुनिक SQL टिप्स के लिए 'SQL Tips' टाइप करें[/bold]")
-        console.print("[yellow]5.[/yellow] मुख्य मेनू पर वापस जाएं")
-
-        choice = Prompt.ask("कृपया एक विकल्प चुनें", choices=["1", "2", "3", "4", "5"])
-
-        if choice == "1":
-               open_url("https://github.com/mishra9759harshit/sqldatabase")  
-        elif choice == "2":
-                 email = "mailto:mishra9759harshit@gmail.com"
-                 open_url(email)  
-                 display_faq()
-        elif choice == "4":
-                sql_tips()
-        else:
-            user_dashboard()
+    except Exception as e:
+        console.print(f"[red]Unexpected error: {e}[/red]")
 
 
 def display_faq():
@@ -907,12 +946,6 @@ def sql_tips():
         time.sleep(2)
         exit()
 
-
-import time
-import plotext as plt
-from rich.console import Console
-from rich.prompt import Prompt
-import sqlite3
 
 console = Console()
 
