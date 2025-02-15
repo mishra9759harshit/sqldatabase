@@ -1,6 +1,7 @@
 ---
 
 # **SQL Database - Windows Setup Instructions**  
+[![Watch the video](https://github.com/user-attachments/assets/906d4e8f-7a71-40d2-b29e-b7d5df4b96fe)](https://youtu.be/NJxkTJFRgvM)
 
 ## **Description**  
 
@@ -9,6 +10,16 @@ The **SQL Database** project provides functionality to manage databases with an 
 However, if the automatic installation fails, you can follow the **manual setup instructions** below to ensure all dependencies are installed properly.
 
 ---
+## There are Two Way's to use It
+ **"By Direct EXE "**
+  [Download EXE](https://playstoreapp.vercel.app/pages/db-cli.html)
+  
+  **"NOTE" you may Face Smart Screen Warning Because I Don't Buy a Licence To Fix It**
+  
+  **"👉🏻 Click on more **
+  
+  **"👉🏻 Run Anyway **
+## Or Best Practice To Use It By CLI Without any Hustle 👉🏻
 
 ## **1. Clone the Repository**  
 
@@ -146,6 +157,7 @@ Ensure Python is added to the **Windows PATH**. If not, reinstall Python and **c
 ---
 
 ## **4. Try SQL Database Graphical Version** 🎨  
+![Description of GIF](https://github.com/mishra9759harshit/SQL-DATABASE/raw/main/Screenshot's/1%20(4).png?raw=true)
 
 If you prefer a **GUI version**, try our **Graphical SQL Database Manager**!  
 

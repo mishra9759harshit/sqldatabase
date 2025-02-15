@@ -1,7 +1,11 @@
 
 
 # **SQL Database - Interactive SQL Learning & Practice Tool**  
-![Description of GIF](https://github.com/mishra9759harshit/sqldatabase/blob/main/SQL%20database.gif)
+[![⬇ PREVIEW FOR ANDROID ⬇](https://img.shields.io/badge/%E2%AC%87%20PREVIEW%20FOR%20ANDROID-%2300C853?style=for-the-badge&logo=android&logoColor=white)](https://github.com/mishra9759harshit/sqldatabase/blob/main/termux.md)
+
+[![⬇ PREVIEW FOR WINDOWS ⬇](https://img.shields.io/badge/%E2%AC%87%20PREVIEW%20FOR%20WINDOWS-%230078D6?style=for-the-badge&logo=windows&logoColor=white)](https://youtu.be/NJxkTJFRgvM)
+
+
 
 The **SQL Database** is a powerful **cross-platform** SQL practice tool that enables users to **learn, execute, and improve SQL skills** with interactive features.  
 
@@ -13,7 +17,15 @@ The **SQL Database** is a powerful **cross-platform** SQL practice tool that ena
 ## **🌍 Choose Your Platform**  
 #Click To choose ![arrow](https://github.com/mishra9759harshit/Photos/blob/main/arrow-5645_256.gif)
 
-[![Android/Linux](https://img.shields.io/badge/Android%20%7C%20Linux-Terminal_Mode-black?style=for-the-badge)](https://github.com/mishra9759harshit/sqldatabase/blob/main/termux.md)       [![Windows](https://img.shields.io/badge/Windows-CLI/GUI-black?style=for-the-badge)](https://github.com/mishra9759harshit/sqldatabase/blob/main/instruction.md)  
+[![Android | Linux](https://img.shields.io/badge/Android%20%7C%20Linux-Terminal_Mode-black?style=for-the-badge&logo=android&logoColor=green)](https://github.com/mishra9759harshit/sqldatabase/blob/main/termux.md) 
+<a href="https://github.com/mishra9759harshit/sqldatabase/blob/main/termux.md">
+    <img src="https://github.com/user-attachments/assets/bd5a18ad-1c69-442d-9045-aee0af8e86a7" width="90" height="90">
+</a>
+ [![Windows](https://img.shields.io/badge/Windows-CLI/GUI-black?style=for-the-badge&logo=windows&logoColor=blue)](https://github.com/mishra9759harshit/sqldatabase/blob/main/instruction.md)
+<a href="https://github.com/mishra9759harshit/sqldatabase/blob/main/instruction.md">
+    <img src="https://github.com/user-attachments/assets/9a29e91c-080e-4a7b-bb5f-a83907933a5e" width="90" height="90">
+</a>
+
 
 ---
 
@@ -26,6 +38,13 @@ The **SQL Database** is a powerful **cross-platform** SQL practice tool that ena
 📊 **Visual Data Representation** – See results with **ASCII charts & tables**  
 🎨 **Graphical Mode** *(Windows Only)* – Use an **interactive UI** for SQL practice  
 
+---
+### 🚀 Talk with My AI Assistant  
+
+[![AI Assistant](https://img.shields.io/badge/🤖%20Chat%20with%20My%20assistant-0078D4?style=for-the-badge&logo=ai&logoColor=white)](https://t.me/Intelligent_Real_Time_Assist_bot)
+<a href="https://t.me/Intelligent_Real_Time_Assist_bot">
+    <img src="https://github.com/user-attachments/assets/e5c82e74-2777-4a71-865c-8e89800e5c6a" alt="Assistant" width="90" height="90">
+</a>
 ---
 
 ## **👨‍💻 Developer Info**  
