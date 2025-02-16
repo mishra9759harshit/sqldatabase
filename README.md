@@ -4,7 +4,7 @@
 [![⬇ PREVIEW FOR ANDROID ⬇](https://img.shields.io/badge/%E2%AC%87%20PREVIEW%20FOR%20ANDROID-%2300C853?style=for-the-badge&logo=android&logoColor=white)](https://github.com/mishra9759harshit/sqldatabase/blob/main/termux.md)
 
 [![⬇ PREVIEW FOR WINDOWS ⬇](https://img.shields.io/badge/%E2%AC%87%20PREVIEW%20FOR%20WINDOWS-%230078D6?style=for-the-badge&logo=windows&logoColor=white)](https://youtu.be/NJxkTJFRgvM)
-[![⬇ Trailer ⬇](https://img.shields.io/badge/%E2%AC%87%20PREVIEW%20FOR%20WINDOWS-%230078D6?style=for-the-badge&logo=windows&logoColor=white)](https://youtu.be/Vyy4iHCxRdE?feature=shared)
+[![⬇ Trailer ⬇](https://img.shields.io/badge/%E2%AC%87%20Trailer-%230078D6?style=for-the-badge&logo=Trailer&logoColor=white)](https://youtu.be/Vyy4iHCxRdE?feature=shared)
 
 
 
