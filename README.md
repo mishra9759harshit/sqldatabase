@@ -52,7 +52,7 @@ The **SQL Database** is a powerful **cross-platform** SQL practice tool that ena
 ## **👨‍💻 Developer Info**  
 
 📌 **Developed By**: **Harshit Mishra**  
-📜 **License**: [MIT License](https://github.com/mishra9759harshit/sqldatabase/blob/main/LICENSE)  
+📜 **License**: [MIT License](https://github.com/mishra9759harshit/sqldatabase/blob/main/LICENSE.md)  
 📧 **Contact**: mishra9759harshit@gmail.com  
 🔗 **GitHub**: [mishra9759harshit](https://github.com/mishra9759harshit)  
 
