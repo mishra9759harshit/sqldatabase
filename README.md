@@ -17,7 +17,7 @@ The **SQL Database** is a powerful **cross-platform** SQL practice tool that ena
 ---
 
 ## **🌍 Choose Your Platform**  
-##Click To choose ![arrow](https://github.com/mishra9759harshit/Photos/blob/main/arrow-5645_256.gif)
+## Click To choose ![arrow](https://github.com/mishra9759harshit/Photos/blob/main/arrow-5645_256.gif)
 
 [![Android | Linux](https://img.shields.io/badge/Android%20%7C%20Linux-Terminal_Mode-black?style=for-the-badge&logo=android&logoColor=green)](https://github.com/mishra9759harshit/sqldatabase/blob/main/termux.md) 
 <a href="https://github.com/mishra9759harshit/sqldatabase/blob/main/termux.md">
