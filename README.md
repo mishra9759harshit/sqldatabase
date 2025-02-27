@@ -66,3 +66,5 @@ If you find this project useful, **give it a star on GitHub!** 🌟
 [![GitHub Stars](https://img.shields.io/github/stars/mishra9759harshit/sqldatabase?style=for-the-badge&color=yellow)](https://github.com/mishra9759harshit/sqldatabase/stargazers)  
 
 ---
+## **Other Projects** 
+[SecureCode](https://securecoder.vercel.app)
