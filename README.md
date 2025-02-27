@@ -68,4 +68,5 @@ If you find this project useful, **give it a star on GitHub!** 🌟
 ---
 ## **Other Projects** 
 [SecureCode](https://securecoder.vercel.app)
-[My Play Store](https://playstore.vercel.app)
+
+[My Play Store](https://playstoreapp.vercel.app/)
