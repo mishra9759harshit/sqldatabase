@@ -47,6 +47,8 @@ The **SQL Database** is a powerful **cross-platform** SQL practice tool that ena
 <a href="https://t.me/Intelligent_Real_Time_Assist_bot">
     <img src="https://github.com/user-attachments/assets/e5c82e74-2777-4a71-865c-8e89800e5c6a" alt="Assistant" width="90" height="90">
 </a>
+
+**Chat with Lily**
 ---
 
 ## **👨‍💻 Developer Info**  
