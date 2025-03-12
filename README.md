@@ -49,7 +49,7 @@ The **SQL Database** is a powerful **cross-platform** SQL practice tool that ena
 </a>
 
 **Chat with Lily**
-[Click to Chat with Lily](
+[Click to Chat with Lily](https://t.me/chatwithlilybot)
 ---
 
 ## **👨‍💻 Developer Info**  
