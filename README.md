@@ -33,7 +33,7 @@ The **SQL Database** is a powerful **cross-platform** SQL practice tool that ena
 
 ## **✨ Features**  
 
-🚀 **Cross-Platform Support** – Works on **Android (Termux), Linux, and Windows**  
+ **Cross-Platform Support** – Works on **Android (Termux), Linux, and Windows**  
 🔍 **Smart Query Suggestions** – Detects **errors** & provides **fixes**  
 📜 **Query History** – Save and **re-execute previous queries**  
 🎓 **SQL Quiz Mode** – Test your knowledge with **interactive SQL quizzes**  
@@ -41,7 +41,7 @@ The **SQL Database** is a powerful **cross-platform** SQL practice tool that ena
 🎨 **Graphical Mode** *(Windows Only)* – Use an **interactive UI** for SQL practice  
 
 ---
-### 🚀 Talk with My AI Assistant  
+###  Talk with My AI Assistant  
 
 [![AI Assistant](https://img.shields.io/badge/🤖%20Chat%20with%20My%20assistant-0078D4?style=for-the-badge&logo=ai&logoColor=white)](https://t.me/Intelligent_Real_Time_Assist_bot)
 <a href="https://t.me/Intelligent_Real_Time_Assist_bot">
